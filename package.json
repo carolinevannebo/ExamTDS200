@@ -14,7 +14,7 @@
     "expo": "^49.0.21",
     "expo-status-bar": "~1.6.0",
     "firebase": "^10.7.1",
-    "firebase-tools": "^12.9.1",
+    "firebase-tools": "^13.0.0",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-dom": "18.2.0",
