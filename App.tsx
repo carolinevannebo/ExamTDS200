@@ -1,11 +1,11 @@
 import { View } from 'react-native';
-import { Register } from './src/components/Register';
+import InitialNavigation from './src/routes/InitialNavigation';
 import './dist/output.css';
 
 export default function App() {
   return (
-    <View className='flex-1 items-center justify-center bg-zinc-950'>
-      <Register navigation={undefined}></Register>
+    <View className='flex-auto items-center justify-center bg-zinc-950'>
+      <InitialNavigation />
     </View>
   );
 }

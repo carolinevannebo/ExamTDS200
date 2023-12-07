@@ -3,6 +3,8 @@ import { useState } from 'react';
 import {initializeApp} from 'firebase/app';
 import { getFirestore, collection, doc, setDoc, query, where, getDocs } from 'firebase/firestore/lite';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+//import useOwnNavigation from '../hooks/useOwnNavigation';
+import { navigate } from '../routes/NavigationRef';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -18,12 +20,8 @@ const app = initializeApp(firebaseConfig);
 const defaultFirestore = getFirestore(app);
 const auth = getAuth(app);
 
-
-interface RegisterProps {
-  navigation: any;
-}
-
-export const Register: React.FC<RegisterProps> = (props) => {
+export const Register: React.FC = () => {
+  //const { navigate } = useOwnNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repassword, setRepassword] = useState('');
@@ -94,6 +92,7 @@ export const Register: React.FC<RegisterProps> = (props) => {
               followersCount: 0,
             });
             console.log('User account created!');
+            navigate('LogIn');
           })
           .catch((error) => {
             console.log(error);
@@ -117,8 +116,8 @@ export const Register: React.FC<RegisterProps> = (props) => {
   };
 
   return (
-    <View className='rounded-lg shadow-xl space-y-5 bg-zinc-800 p-6'>
-      <Text className='text-xl text-zinc-200'>Register</Text>
+    <View className='container w-max rounded-lg shadow-xl space-y-5 bg-zinc-800 p-6'>
+      <Text className='text-xl text-zinc-200'>Create account</Text>
 
       <TextInput
       className='rounded-lg shadow-sm ring-1 ring-inset ring-zinc-700 py-1.5 pl-2 text-zinc-200 placeholder:text-gray-400 sm:text-sm sm:leading-6 bg-zinc-700'
@@ -155,12 +154,10 @@ export const Register: React.FC<RegisterProps> = (props) => {
       onChangeText={(repassword) => setRepassword(repassword)}
       />
 
-      <TouchableOpacity
-      className='rounded-lg shadow-sm bg-cyan-800 hover:bg-cyan-950 text-white font-bold py-2 px-4 sm:text-sm sm:leading-6'
-      >
+      <TouchableOpacity className='rounded-lg shadow-sm bg-cyan-800 hover:bg-cyan-950 text-white font-bold py-2 px-4 sm:text-sm sm:leading-6'>
         <Button
         onPress={() => onRegister()}
-        title='Register'
+        title='Sign up'
         />
       </TouchableOpacity>
 
