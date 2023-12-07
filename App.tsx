@@ -1,11 +1,21 @@
+import React from 'react';
 import { View } from 'react-native';
 import InitialNavigation from './src/routes/InitialNavigation';
-import './dist/output.css';
+import { StyleSheet } from 'react-native';
 
 export default function App() {
   return (
-    <View className='flex-auto items-center justify-center bg-zinc-950'>
+    <View style={styles.app}>
       <InitialNavigation />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  app: {
+    flex: 1,
+    backgroundColor: '#09090b',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

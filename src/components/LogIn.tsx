@@ -3,6 +3,7 @@ import { useState } from 'react';
 //import useOwnNavigation from '../hooks/useOwnNavigation';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { navigate } from '../routes/NavigationRef';
+import { StyleSheet } from 'react-native';
 
 export const LogIn: React.FC = () => {
     //const { navigate } = useOwnNavigation();
@@ -22,30 +23,92 @@ export const LogIn: React.FC = () => {
     }
 
     return (
-        <View className='container w-max rounded-lg shadow-xl space-y-5 bg-zinc-800 p-6'>
-          <Text className='text-xl text-zinc-200'>Log in</Text>
+      <View style={styles.container}>
+        <View style={styles.subContainer}>
+          <Text style={styles.title}>Log in</Text>
     
           <TextInput
-          className='rounded-lg shadow-sm ring-1 ring-inset ring-zinc-700 py-1.5 pl-2 text-zinc-200 placeholder:text-gray-400 sm:text-sm sm:leading-6 bg-zinc-700'
+          style={styles.textField}
           placeholder='Email'
           value={email}
           onChangeText={(email) => setEmail(email)}
           />
     
           <TextInput
-          className='rounded-lg shadow-sm ring-1 ring-inset ring-zinc-700 py-1.5 pl-2 text-zinc-200 placeholder:text-gray-400 sm:text-sm sm:leading-6 bg-zinc-700'
+          style={styles.textField}
           placeholder='Password'
           value={password}
           onChangeText={(password) => setPassword(password)}
           />
     
-          <TouchableOpacity className='rounded-lg shadow-sm bg-cyan-800 hover:bg-cyan-950 text-white font-bold py-2 px-4 sm:text-sm sm:leading-6'>
-            <Button
-            onPress={() => onLogin()}
-            title='Log in'
-            />
+          <TouchableOpacity 
+          style={styles.button}
+          onPress={() => onLogin()}>
+            <Text style={styles.text}>
+            Log in
+            </Text>
           </TouchableOpacity>
     
         </View>
+      </View>
       )
 }
+
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+  },
+  subContainer: {
+      borderRadius: 10,
+      shadowRadius: 10,
+      backgroundColor: '#27272a',
+      justifyContent: 'center',
+      alignItems: 'center',
+      margin: 10,
+      padding: 40,
+      width: 'auto',
+      height: 'auto',
+  },
+  title: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#e4e4e7',
+      marginBottom: 10,
+      width: 240,
+  },
+  subTitle: {
+      fontSize: 16,
+      color: '#d4d4d8',
+      marginBottom: 20,
+  },
+  text: {
+      color: '#d4d4d8',
+  },
+  textField: {
+      borderRadius: 10,
+      shadowRadius: 5,
+      shadowColor: '#18181b',
+      backgroundColor: '#3f3f46',
+      justifyContent: 'center',
+      alignItems: 'center',
+      margin: 10,
+      padding: 10,
+      width: 240,
+      color: '#e4e4e7',
+      placeholderTextColor: '#9ca3af',
+  },
+  button: {
+      borderRadius: 10,
+      shadowRadius: 5,
+      shadowColor: '#18181b',
+      backgroundColor: '#155e75',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 10,
+      margin: 10,
+      width: 240,
+      color: '#cffafe',
+  },
+});

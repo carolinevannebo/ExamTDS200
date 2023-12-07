@@ -15,7 +15,7 @@ const InitialNavigation: React.FC = () => {
         ref={navigationRef}
         >
             <Navigator initialRouteName='WelcomePage'>
-                <Screen name="WelcomePage" component={WelcomePage} />
+                <Screen name="WelcomePage" component={WelcomePage}/>
                 <Screen name="SignUp" component={Register} />
                 <Screen name="LogIn" component={LogIn} />
                 <Screen name="HomePage" component={HomePage} />
