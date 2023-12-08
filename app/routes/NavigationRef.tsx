@@ -1,3 +1,5 @@
+// Navigation reference that solved an issue I had with cross platform navigation
+
 import React from 'react';
 import { NavigationContainerRef } from '@react-navigation/native';
 

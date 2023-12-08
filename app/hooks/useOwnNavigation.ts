@@ -1,11 +1,12 @@
-import React from "react";
+// Navigation hook for routing
+
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 
 export type RouteList = {
     WelcomePage: undefined;
     Register: undefined;
     LogIn: undefined;
-    HomePage: undefined;
+    HomeNavigation: undefined;
 };
 
 type OwnNavigationProp = NavigationProp<RouteList>;

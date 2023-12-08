@@ -1,10 +1,17 @@
+// Firebase configuration file
+
+import { Platform } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore/lite';
-import { Auth, getAuth, initializeAuth, getReactNativePersistence} from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
+import { 
+  Auth, 
+  getAuth, 
+  initializeAuth, 
+  getReactNativePersistence, 
+  onAuthStateChanged
+} from 'firebase/auth';
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDi9ybfSnATQ_7TNaDWyaHXhsqhae0-O_Q",
   authDomain: "travel-snap-47abd.firebaseapp.com",
@@ -26,5 +33,16 @@ if (Platform.OS === 'web') {
     persistence: getReactNativePersistence(ReactNativeAsyncStorage),
   });
 }
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const uid = user.uid;
+    console.log('User is signed in', uid);
+    return user;
+  } else {
+    console.log('User is signed out');
+    return null;
+  }
+});
 
 export { app, db, auth };

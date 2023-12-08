@@ -1,8 +1,10 @@
+// Welcome page for first time users
+
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { navigate } from '../routes/NavigationRef';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
+import BackgroundImage from '../assets/BackgroundImage';
 
 const WelcomePage: React.FC = () => {
 
@@ -15,6 +17,7 @@ const WelcomePage: React.FC = () => {
     };
 
     return (
+        <BackgroundImage>
         <SafeAreaView style={styles.container}>
             <View style={styles.subContainer}>
                 <Text style={styles.title}>Welcome to Travel Snap!</Text>
@@ -37,6 +40,7 @@ const WelcomePage: React.FC = () => {
                 </Pressable>
             </View>
         </SafeAreaView>
+        </BackgroundImage>
     );
 };
 
@@ -47,12 +51,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#09090b',
     },
     subContainer: {
         borderRadius: 10,
         shadowRadius: 10,
-        backgroundColor: '#27272a',
+        shadowColor: '#a16207',
+        backgroundColor: 'rgba(255, 237, 213, 0.7)',
         justifyContent: 'center',
         alignItems: 'center',
         margin: 10,
@@ -63,28 +67,27 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#e4e4e7',
+        color: '#451a03',
         marginBottom: 10,
         width: 240,
     },
     subTitle: {
         fontSize: 16,
-        color: '#d4d4d8',
+        color: '#78350f',
         marginBottom: 20,
     },
     text: {
-        color: '#d4d4d8',
+        color: '#fef3c7',
     },
     button: {
         borderRadius: 10,
         shadowRadius: 5,
-        shadowColor: '#18181b',
-        backgroundColor: '#155e75',
+        shadowColor: '#451a03',
+        backgroundColor: '#134e4a',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        margin: 10,
+        margin: 5,
         width: 240,
-        color: '#cffafe',
     },
 });

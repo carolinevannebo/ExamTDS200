@@ -1,10 +1,12 @@
+// Initial navigation upon starting the app for the first time
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { navigationRef } from "./routes/NavigationRef";
 import WelcomePage from "./pages/WelcomePage";
 import { Register } from "./components/Register";
 import { LogIn } from "./components/LogIn";
-import HomePage from "./pages/HomePage";
+import HomeNavigation from "./routes/HomeNavigation";
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -14,22 +16,23 @@ const Layout = () => {
             independent={true}
             ref={navigationRef}
             >
-                <Navigator initialRouteName='pages/WelcomePage' screenOptions={screenOptions}>
-                    <Screen name="pages/WelcomePage" component={WelcomePage}/>
-                    <Screen name="components/Register" component={Register}/>
-                    <Screen name="components/LogIn" component={LogIn}/>
-                    <Screen name="pages/HomePage" component={HomePage} options={{
-                        headerShown: false,
-                    }}/>
+                <Navigator initialRouteName='pages/HomeNavigation' screenOptions={screenOptions}>
+                    <Screen name="pages/WelcomePage" component={WelcomePage} />
+                    <Screen name="components/Register" component={Register} />
+                    <Screen name="components/LogIn" component={LogIn} />
+                    <Screen name="routes/HomeNavigation" component={HomeNavigation} />
                 </Navigator>
             </NavigationContainer>
     )
 }
 
 const screenOptions = {
-    headerStyle: { backgroundColor: '#09090b'},
+    headerShown: false,
+}
+/*const screenOptions = {
+    headerStyle: { backgroundColor: '#042f2e' },
     headerTintColor: '#ecfeff',
     headerTitle: '',
-}
+}*/
 
 export default Layout;
