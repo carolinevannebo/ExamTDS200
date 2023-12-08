@@ -1,4 +1,4 @@
-import { Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, Pressable } from 'react-native';
 import { useState } from 'react';
 import { db, auth } from '../services/firebaseconfig';
 import { collection, doc, setDoc, query, where, getDocs } from 'firebase/firestore/lite';
@@ -82,7 +82,7 @@ export const Register: React.FC = () => {
 
             console.log('User account created!');
 
-            ReactNativeAsyncStorage.setItem(auth.currentUser?.uid, JSON.stringify({ //endre id til 'userData'?
+            ReactNativeAsyncStorage.setItem(auth.currentUser!.uid, JSON.stringify({ //endre id til 'userData'?
               name: name,                                      //kan vi stringifie currentUserDoc?
               userName: userName,
               email: email,
@@ -94,7 +94,7 @@ export const Register: React.FC = () => {
             }))
             .then(() => {
               console.log('User data stored in AsyncStorage');
-              navigate('LogIn');
+              navigate('components/LogIn');
             })
             .catch((error) => {
               console.error('Error storing user data in AsyncStorage:', error);
@@ -166,13 +166,13 @@ export const Register: React.FC = () => {
         onChangeText={(repassword) => setRepassword(repassword)}
         />
 
-        <TouchableOpacity 
+        <Pressable 
         style={styles.button}
         onPress={() => onRegister()}>
           <Text style={styles.text}>
           Sign up
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </SafeAreaView>
   )

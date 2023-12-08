@@ -3,7 +3,7 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 
 export type RouteList = {
     WelcomePage: undefined;
-    SignUp: undefined;
+    Register: undefined;
     LogIn: undefined;
     HomePage: undefined;
 };

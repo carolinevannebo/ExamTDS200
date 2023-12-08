@@ -1,4 +1,4 @@
-import { Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
+import { Text, View, TextInput, Pressable } from 'react-native';
 import { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { navigate } from '../routes/NavigationRef';
@@ -14,7 +14,7 @@ export const LogIn: React.FC = () => {
         signInWithEmailAndPassword(auth, email, password)
         .then(() => {
             console.log('User logged in!');
-            navigate('HomePage');
+            navigate('pages/HomePage');
         })
         .catch((error) => {
             console.log('Error logging in: ', error);
@@ -42,13 +42,13 @@ export const LogIn: React.FC = () => {
           onChangeText={(password) => setPassword(password)}
           />
     
-          <TouchableOpacity 
+          <Pressable 
           style={styles.button}
           onPress={() => onLogin()}>
             <Text style={styles.text}>
             Log in
             </Text>
-          </TouchableOpacity>
+          </Pressable>
     
         </View>
       </SafeAreaView>

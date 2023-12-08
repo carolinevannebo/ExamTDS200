@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { navigate } from '../routes/NavigationRef';
@@ -7,11 +7,11 @@ import { navigate } from '../routes/NavigationRef';
 const WelcomePage: React.FC = () => {
 
     const handleSignUp = () => {
-        navigate('SignUp');
+        navigate('components/Register');
     };
 
     const handleLogIn = () => {
-        navigate('LogIn');
+        navigate('components/LogIn');
     };
 
     return (
@@ -20,21 +20,21 @@ const WelcomePage: React.FC = () => {
                 <Text style={styles.title}>Welcome to Travel Snap!</Text>
                 <Text style={styles.subTitle}>Sign up or log in to get started!</Text>
 
-                <TouchableOpacity 
+                <Pressable 
                 style={styles.button}
                 onPress={handleSignUp}>
                     <Text style={styles.text}>
                     Sign up
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
 
-                <TouchableOpacity 
+                <Pressable 
                 style={styles.button}
                 onPress={handleLogIn}>
                     <Text style={styles.text}>
                     Log in
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
             </View>
         </SafeAreaView>
     );
