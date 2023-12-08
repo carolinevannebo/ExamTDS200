@@ -2,7 +2,7 @@ import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { db, auth } from '../services/firebaseconfig';
 import { collection, doc, setDoc, query, where, getDocs } from 'firebase/firestore/lite';
-import { createUserWithEmailAndPassword, initializeAuth, browserLocalPersistence, browserSessionPersistence} from 'firebase/auth';//, getReactNativePersistence } from 'firebase/auth';
+import { createUserWithEmailAndPassword} from 'firebase/auth';//, getReactNativePersistence } from 'firebase/auth';
 //import useOwnNavigation from '../hooks/useOwnNavigation';
 import { navigate } from '../routes/NavigationRef';
 import { StyleSheet } from 'react-native';
