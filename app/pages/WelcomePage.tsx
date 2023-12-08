@@ -1,12 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Button } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { StyleSheet } from 'react-native';
-//import useOwnNavigation from '../hooks/useOwnNavigation';
-import { navigate } from '../routes/NavigationRef';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { navigate } from '../routes/NavigationRef';
 
 const WelcomePage: React.FC = () => {
-    //const { navigate } = useOwnNavigation();
 
     const handleSignUp = () => {
         navigate('SignUp');
@@ -49,6 +47,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#09090b',
     },
     subContainer: {
         borderRadius: 10,

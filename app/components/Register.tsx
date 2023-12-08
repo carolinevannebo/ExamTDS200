@@ -4,13 +4,11 @@ import { db, auth } from '../services/firebaseconfig';
 import { collection, doc, setDoc, query, where, getDocs } from 'firebase/firestore/lite';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { createUserWithEmailAndPassword} from 'firebase/auth';
-//import useOwnNavigation from '../hooks/useOwnNavigation';
 import { navigate } from '../routes/NavigationRef';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Register: React.FC = () => {
-  //const { navigate } = useOwnNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repassword, setRepassword] = useState('');
@@ -131,6 +129,7 @@ export const Register: React.FC = () => {
         <TextInput
         style={styles.textField}
         placeholder='Username'
+        placeholderTextColor={'#9ca3af'}
         value={userName}
         onChangeText={(userName) => setUserName(userName)}
         />
@@ -138,6 +137,7 @@ export const Register: React.FC = () => {
         <TextInput
         style={styles.textField}
         placeholder='Name'
+        placeholderTextColor={'#9ca3af'}
         value={name}
         onChangeText={(name) => setName(name)}
         />
@@ -145,6 +145,7 @@ export const Register: React.FC = () => {
         <TextInput
         style={styles.textField}
         placeholder='Email'
+        placeholderTextColor={'#9ca3af'}
         value={email}
         onChangeText={(email) => setEmail(email)}
         />
@@ -152,6 +153,7 @@ export const Register: React.FC = () => {
         <TextInput
         style={styles.textField}
         placeholder='Password'
+        placeholderTextColor={'#9ca3af'}
         value={password}
         onChangeText={(password) => setPassword(password)}
         />
@@ -159,6 +161,7 @@ export const Register: React.FC = () => {
         <TextInput
         style={styles.textField}
         placeholder='Repeat Password'
+        placeholderTextColor={'#9ca3af'}
         value={repassword}
         onChangeText={(repassword) => setRepassword(repassword)}
         />
@@ -180,6 +183,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: '#09090b',
   },
   subContainer: {
       borderRadius: 10,
@@ -218,7 +222,6 @@ const styles = StyleSheet.create({
       padding: 10,
       width: 240,
       color: '#e4e4e7',
-      placeholderTextColor: '#9ca3af',
   },
   button: {
       borderRadius: 10,

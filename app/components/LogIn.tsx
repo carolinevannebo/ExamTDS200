@@ -1,13 +1,11 @@
 import { Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
-//import useOwnNavigation from '../hooks/useOwnNavigation';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { navigate } from '../routes/NavigationRef';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const LogIn: React.FC = () => {
-    //const { navigate } = useOwnNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -31,6 +29,7 @@ export const LogIn: React.FC = () => {
           <TextInput
           style={styles.textField}
           placeholder='Email'
+          placeholderTextColor={'#9ca3af'}
           value={email}
           onChangeText={(email) => setEmail(email)}
           />
@@ -38,6 +37,7 @@ export const LogIn: React.FC = () => {
           <TextInput
           style={styles.textField}
           placeholder='Password'
+          placeholderTextColor={'#9ca3af'}
           value={password}
           onChangeText={(password) => setPassword(password)}
           />
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: '#09090b',
   },
   subContainer: {
       borderRadius: 10,
@@ -98,7 +99,6 @@ const styles = StyleSheet.create({
       padding: 10,
       width: 240,
       color: '#e4e4e7',
-      placeholderTextColor: '#9ca3af',
   },
   button: {
       borderRadius: 10,

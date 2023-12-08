@@ -30,8 +30,10 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "scheme": "travelsnap",
     "plugins": [
-      "expo-build-properties"
+      "expo-build-properties",
+      "expo-router"
     ],
     "extra": {
       "eas": {
