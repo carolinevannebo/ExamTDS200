@@ -16,25 +16,27 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "bundleIdentifier": "TDS200",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "useFrameworks": "static"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.tds200.travelsnap"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "@react-native-firebase/app",
-      "expo-build-properties",
-      {
-        "ios": {
-          "useFrameworks": "static"
-        }
+      "expo-build-properties"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f9a09419-b7f4-4daf-8093-5f16b6dfa38c"
       }
-    ]
+    }
   }
 }

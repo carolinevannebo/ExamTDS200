@@ -1,8 +1,8 @@
 import { Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, doc, setDoc, query, where, getDocs } from 'firebase/firestore/lite';
-import { getAuth, createUserWithEmailAndPassword, initializeAuth, browserLocalPersistence, browserSessionPersistence} from 'firebase/auth';//, getReactNativePersistence } from 'firebase/auth';
+import { db, auth } from '../services/firebaseconfig';
+import { collection, doc, setDoc, query, where, getDocs } from 'firebase/firestore/lite';
+import { createUserWithEmailAndPassword, initializeAuth, browserLocalPersistence, browserSessionPersistence} from 'firebase/auth';//, getReactNativePersistence } from 'firebase/auth';
 //import useOwnNavigation from '../hooks/useOwnNavigation';
 import { navigate } from '../routes/NavigationRef';
 import { StyleSheet } from 'react-native';
@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //import { initializeAuth, getReactNativePersistence } from "firebase/auth/react-native"
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+/*const firebaseConfig = {
   apiKey: "AIzaSyDi9ybfSnATQ_7TNaDWyaHXhsqhae0-O_Q",
   authDomain: "travel-snap-47abd.firebaseapp.com",
   projectId: "travel-snap-47abd",
@@ -26,8 +26,8 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const firestore = getFirestore(app);
-const auth = getAuth(app);
+const db = getFirestore(app);
+const auth = getAuth(app);*/
 
 
 //auth.setPersistence(getReactNativePersistence(ReactNativeAsyncStorage))
@@ -100,7 +100,7 @@ export const Register: React.FC = () => {
     validatePassword(password);
 
     if (isValid.bool) {
-    const usersCollection = collection(firestore, 'users');
+    const usersCollection = collection(db, 'users');
     const userQuery = query(usersCollection, where('userName', '==', userName));
       getDocs(userQuery)
       .then((querySnapshot) => {
