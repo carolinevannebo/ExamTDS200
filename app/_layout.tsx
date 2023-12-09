@@ -16,7 +16,7 @@ const Layout = () => {
             independent={true}
             ref={navigationRef}
             >
-                <Navigator initialRouteName='pages/HomeNavigation' screenOptions={screenOptions}>
+                <Navigator initialRouteName='routes/HomeNavigation' screenOptions={screenOptions}>
                     <Screen name="pages/WelcomePage" component={WelcomePage} />
                     <Screen name="components/Register" component={Register} />
                     <Screen name="components/LogIn" component={LogIn} />

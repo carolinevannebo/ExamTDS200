@@ -34,7 +34,14 @@
     "scheme": "travelsnap",
     "plugins": [
       "expo-build-properties",
-      "expo-router"
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
+        }
+      ]
     ],
     "extra": {
       "eas": {
