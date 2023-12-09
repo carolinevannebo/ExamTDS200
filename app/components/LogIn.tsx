@@ -3,21 +3,16 @@
 import { Text, View, TextInput, Pressable } from 'react-native';
 import { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { navigate, goBack } from '../routes/NavigationRef';
+import { navigate } from '../routes/NavigationRef';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BackgroundImage from '../assets/BackgroundImage';
-import { Assets } from '../Assets';
-import BackButton from '../assets/BackButton';
+import BackButton from './BackButton';
 
 export const LogIn: React.FC = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const handleBack = () => {
-        goBack();
-    }
 
     const onLogin = () => {
         const auth = getAuth();
@@ -33,10 +28,8 @@ export const LogIn: React.FC = () => {
 
     return (
         <BackgroundImage>
+            <BackButton />
             <SafeAreaView style={styles.container}>
-                
-                <BackButton Icon={Assets.icons.Back} onPress={handleBack} />
-
                 <View style={styles.subContainer}>
                 <Text style={styles.title}>Log in</Text>
             

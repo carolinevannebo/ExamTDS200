@@ -6,9 +6,10 @@ import { db, auth } from '../services/firebaseconfig';
 import { collection, doc, setDoc, query, where, getDocs } from 'firebase/firestore/lite';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { createUserWithEmailAndPassword} from 'firebase/auth';
-import { navigate } from '../routes/NavigationRef';
+import { navigate, goBack } from '../routes/NavigationRef';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BackgroundImage from '../assets/BackgroundImage';
+import BackButton from './BackButton';
 
 export const Register: React.FC = () => {
 
@@ -109,6 +110,7 @@ export const Register: React.FC = () => {
 
   return (
     <BackgroundImage>
+      <BackButton />
       <SafeAreaView style={styles.container}>
             <View style={styles.subContainer}>
             <Text style={styles.title}>Create account</Text>
@@ -219,5 +221,5 @@ const styles = StyleSheet.create({
       padding: 10,
       margin: 5,
       width: 240,
-},
+  },
 });
