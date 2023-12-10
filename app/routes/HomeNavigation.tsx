@@ -3,11 +3,11 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
-import HomeIcon from "../assets/icons/HomeIcon";
-import ProfileIcon from "../assets/icons/ProfileIcon";
-import PostButton from "../components/PostButton";
 import { ModalStateContext, IModalStateContext } from "../contexts/ModalStateContext";
 import { useContext } from "react";
+import Assets from "../Assets";
+import IconButton from "../components/IconButton";
+import { View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,12 +22,14 @@ const HomeNavigation: React.FC = () => {
             options={{
                 headerTitle: "",
                 headerRight: () => (
-                    <PostButton onPress={openModal} />
+                    <IconButton Icon={() => 
+                        <Assets.icons.Add width={30} height={30} fill="#1d4342"/>
+                    } onPress={openModal} style={{marginRight: 15}} />
                 ),
                 tabBarIcon: ({focused}) => (
-                    <HomeIcon style={{
-                        opacity: focused ? 0.95 : 0.5
-                    }}/>
+                    <View style={{opacity: focused ? 0.95 : 0.5}}>
+                        <Assets.icons.Home width={30} height={30} fill="#fff"/>
+                    </View>
                 )
             }}/>
 
@@ -37,10 +39,9 @@ const HomeNavigation: React.FC = () => {
             options={{
                 headerShown: false,
                 tabBarIcon: ({focused}) => (
-                    <ProfileIcon style={{
-                        opacity: focused ? 0.95 : 0.5
-                        
-                    }}/>
+                    <View style={{opacity: focused ? 0.95 : 0.5}}>
+                        <Assets.icons.Profile width={30} height={30} fill="#fff"/>
+                    </View>
                 )
             }}/>
         </Tab.Navigator>

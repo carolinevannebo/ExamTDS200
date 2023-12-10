@@ -5,7 +5,6 @@ import { initializeApp } from 'firebase/app';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable, listAll } from 'firebase/storage';
 import { getFirestore, initializeFirestore, collection, doc, setDoc, serverTimestamp, GeoPoint } from 'firebase/firestore/lite';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import * as Location from 'expo-location';
 import { navigate } from '../routes/NavigationRef';
 import { 
   Auth, 

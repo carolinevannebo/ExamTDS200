@@ -3,11 +3,12 @@
 import { Text, View, TextInput, Pressable } from 'react-native';
 import { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { navigate } from '../routes/NavigationRef';
+import { navigate, goBack } from '../routes/NavigationRef';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BackgroundImage from '../assets/BackgroundImage';
-import BackButton from './BackButton';
+import IconButton from './IconButton';
+import Assets from '../Assets';
 
 export const LogIn: React.FC = () => {
 
@@ -28,7 +29,7 @@ export const LogIn: React.FC = () => {
 
     return (
         <BackgroundImage>
-            <BackButton />
+            <IconButton Icon={Assets.icons.Back} onPress={() => goBack()} style={styles.backButton} />
             <SafeAreaView style={styles.container}>
                 <View style={styles.subContainer}>
                 <Text style={styles.title}>Log in</Text>
@@ -116,5 +117,11 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 5,
         width: 240,
-  },
+    },
+    backButton: {
+        position: 'absolute',
+        top: 60,
+        left: 25,
+        zIndex: 1,
+    },
 });
