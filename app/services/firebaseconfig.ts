@@ -1,17 +1,27 @@
 // Firebase configuration file
 
+import { Post } from '../models/Post';
 import { Platform } from 'react-native';
-import { initializeApp } from 'firebase/app';
-import { getDownloadURL, getStorage, ref, uploadBytesResumable, listAll } from 'firebase/storage';
-import { getFirestore, initializeFirestore, collection, doc, setDoc, serverTimestamp, GeoPoint } from 'firebase/firestore/lite';
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { navigate } from '../routes/NavigationRef';
+import { initializeApp } from 'firebase/app';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable, listAll } from 'firebase/storage';
+import { 
+  doc,
+  setDoc,
+  GeoPoint,
+  collection,
+  DocumentData,
+  getFirestore,
+  serverTimestamp, 
+  DocumentReference
+} from 'firebase/firestore/lite';
 import { 
   Auth, 
   getAuth, 
   initializeAuth, 
-  getReactNativePersistence, 
-  onAuthStateChanged
+  onAuthStateChanged,
+  getReactNativePersistence
 } from 'firebase/auth';
 
 // for some reason firestore lite doesn't read env variables, my mistake somewhere?
@@ -57,6 +67,10 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+const getImageName = (fileName: string) => {
+  return fileName.slice(0, fileName.lastIndexOf('.'));
+}
+
 const uploadImage = async (
   uri: string, 
   imageName: string, 
@@ -67,7 +81,7 @@ const uploadImage = async (
   const user = auth.currentUser;
   console.log('userID', user?.uid);
 
-  const alteredImageName = imageName.slice(0, imageName.lastIndexOf('.'));
+  //const alteredImageName = imageName.slice(0, imageName.lastIndexOf('.'));
 
   if (!user) {
     throw new Error('No user signed in');
@@ -105,31 +119,36 @@ const uploadImage = async (
 
         // Add image to user, sending to firestore
         const userImagesCollection = collection(db, `users/${auth.currentUser?.uid}/posts`);
-        const currentImageDoc = doc(userImagesCollection, alteredImageName);
-        const imageMetadata = {
+        const postDocRef = doc(userImagesCollection, getImageName(imageName));
+
+        const post: Post = {
           imageName: imageName,
           imageUrl: downloadUrl,
           createdAt: serverTimestamp(),
           location: location,
           description: description,
         };
-        console.log('imageMetadata', imageMetadata);
+        console.log('post', post);
 
-        setDoc(currentImageDoc, imageMetadata);
-
-        ReactNativeAsyncStorage.setItem(`${auth.currentUser?.uid}/posts`, JSON.stringify(imageMetadata))
-        .then(() => {
-          console.log('Image metadata stored in AsyncStorage');
-        })
-        .catch((error) => {
-          console.error('Error storing user data in AsyncStorage:', error);
-        });
-
-        console.log('Upload is complete!');
-      },
+        uploadPost(postDocRef, post);
+      }
     );
   })
 };
+
+const uploadPost = async (docRef: DocumentReference<DocumentData, DocumentData>, post: Post) => {
+  setDoc(docRef, post);
+
+  ReactNativeAsyncStorage.setItem(`${auth.currentUser?.uid}/posts`, JSON.stringify(post))
+  .then(() => {
+    console.log('Post stored in AsyncStorage');
+  })
+  .catch((error) => {
+    console.error('Error storing user data in AsyncStorage:', error);
+  });
+
+  console.log('Upload is complete!');
+}
 
 const listFiles = async () => {
   const user = auth.currentUser;
