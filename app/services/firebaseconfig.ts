@@ -3,8 +3,10 @@
 import { Platform } from 'react-native';
 import { initializeApp } from 'firebase/app';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable, listAll } from 'firebase/storage';
-import { getFirestore, initializeFirestore, collection, doc, setDoc, serverTimestamp } from 'firebase/firestore/lite';
+import { getFirestore, initializeFirestore, collection, doc, setDoc, serverTimestamp, GeoPoint } from 'firebase/firestore/lite';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
+import { navigate } from '../routes/NavigationRef';
 import { 
   Auth, 
   getAuth, 
@@ -52,11 +54,17 @@ onAuthStateChanged(auth, (user) => {
     return user;
   } else {
     console.log('User is signed out');
-    return null;
+    navigate('pages/WelcomePage');
   }
 });
 
-const uploadImage = async (uri: string, imageName: string, onProgress: any ) => { // todo: finn type til any
+const uploadImage = async (
+  uri: string, 
+  imageName: string, 
+  location: GeoPoint | undefined, 
+  description: string, 
+  onProgress: any ) => { // todo: finn type til any
+    
   const user = auth.currentUser;
   console.log('userID', user?.uid);
 
@@ -97,18 +105,20 @@ const uploadImage = async (uri: string, imageName: string, onProgress: any ) => 
         });
 
         // Add image to user, sending to firestore
-        const userImagesCollection = collection(db, `users/${auth.currentUser?.uid}/images`);
+        const userImagesCollection = collection(db, `users/${auth.currentUser?.uid}/posts`);
         const currentImageDoc = doc(userImagesCollection, alteredImageName);
         const imageMetadata = {
           imageName: imageName,
           imageUrl: downloadUrl,
           createdAt: serverTimestamp(),
+          location: location,
+          description: description,
         };
         console.log('imageMetadata', imageMetadata);
 
         setDoc(currentImageDoc, imageMetadata);
 
-        ReactNativeAsyncStorage.setItem(`${auth.currentUser?.uid}/images`, JSON.stringify(imageMetadata))
+        ReactNativeAsyncStorage.setItem(`${auth.currentUser?.uid}/posts`, JSON.stringify(imageMetadata))
         .then(() => {
           console.log('Image metadata stored in AsyncStorage');
         })

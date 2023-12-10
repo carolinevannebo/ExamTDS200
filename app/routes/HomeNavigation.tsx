@@ -5,6 +5,8 @@ import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import HomeIcon from "../assets/icons/HomeIcon";
 import ProfileIcon from "../assets/icons/ProfileIcon";
+import PostButton from "../components/PostButton";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -15,6 +17,10 @@ const HomeNavigation: React.FC = () => {
             name="Feed" 
             component={HomePage}
             options={{
+                headerTitle: "",
+                headerRight: () => (
+                    <PostButton onPress={() => {}} />
+                ),
                 tabBarIcon: ({focused}) => (
                     <HomeIcon style={{
                         opacity: focused ? 0.95 : 0.5
@@ -26,6 +32,7 @@ const HomeNavigation: React.FC = () => {
             name="Profile" 
             component={ProfilePage}
             options={{
+                headerShown: false,
                 tabBarIcon: ({focused}) => (
                     <ProfileIcon style={{
                         opacity: focused ? 0.95 : 0.5
@@ -38,12 +45,14 @@ const HomeNavigation: React.FC = () => {
 }
 
 const screenOptions = {
-    headerShown: false,
     tabBarActiveTintColor: '#f0fdfa',
     tabBarInactiveTintColor: '#1d4342',
     tabBarStyle: { 
         backgroundColor: '#1d4342',
         padding: 10
+    },
+    headerStyle: {
+        backgroundColor: '#ccd5d5',
     },
 }
 
