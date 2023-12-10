@@ -7,6 +7,7 @@ import WelcomePage from "./pages/WelcomePage";
 import { Register } from "./components/Register";
 import { LogIn } from "./components/LogIn";
 import HomeNavigation from "./routes/HomeNavigation";
+import ModalStateProvider from "./contexts/ModalStateContext";
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -20,7 +21,13 @@ const Layout = () => {
                     <Screen name="pages/WelcomePage" component={WelcomePage} />
                     <Screen name="components/Register" component={Register} />
                     <Screen name="components/LogIn" component={LogIn} />
-                    <Screen name="routes/HomeNavigation" component={HomeNavigation} />
+                    <Screen name="routes/HomeNavigation">
+                        {() => (
+                            <ModalStateProvider>
+                                <HomeNavigation />
+                            </ModalStateProvider>
+                        )}
+                    </Screen>
                 </Navigator>
             </NavigationContainer>
     )

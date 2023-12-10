@@ -9,14 +9,19 @@ import { listFiles, uploadImage} from '../services/firebaseconfig';
 import { StorageReference } from 'firebase/storage';
 import { GeoPoint } from 'firebase/firestore/lite';
 import CreatePostModal from './CreatePostModal';
+import { ModalStateContext, IModalStateContext } from "../contexts/ModalStateContext";
+import { useContext } from "react";
 
 const HomePage: React.FC = () => {
+    //const { isModalVisible } = useContext(ModalStateContext) as IModalStateContext;
+
     const [permission, requestPermission] = ImagePicker.useCameraPermissions();
     const [files, setFiles] = useState<File[]>([]);
 
     const [location, setLocation] = useState<Location.LocationObject>();
     const [errorMsg, setErrorMsg] = useState<string>();
 
+    // ubrukt atm
     let text = 'Waiting..';
     if (errorMsg) {
         text = errorMsg;

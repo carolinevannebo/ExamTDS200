@@ -6,20 +6,23 @@ import ProfilePage from "../pages/ProfilePage";
 import HomeIcon from "../assets/icons/HomeIcon";
 import ProfileIcon from "../assets/icons/ProfileIcon";
 import PostButton from "../components/PostButton";
-
+import { ModalStateContext, IModalStateContext } from "../contexts/ModalStateContext";
+import { useContext } from "react";
 
 const Tab = createBottomTabNavigator();
 
 const HomeNavigation: React.FC = () => {
+    const { openModal } = useContext(ModalStateContext) as IModalStateContext;
+    
     return (
         <Tab.Navigator initialRouteName="Feed" screenOptions={screenOptions}>
             <Tab.Screen 
-            name="Feed" 
+            name="Feed"
             component={HomePage}
             options={{
                 headerTitle: "",
                 headerRight: () => (
-                    <PostButton onPress={() => {}} />
+                    <PostButton onPress={openModal} />
                 ),
                 tabBarIcon: ({focused}) => (
                     <HomeIcon style={{

@@ -1,16 +1,18 @@
 import { useState } from "react";
 import {Modal, StyleSheet, Text, Pressable, View} from 'react-native';
+import { ModalStateContext, IModalStateContext } from "../contexts/ModalStateContext";
+import { useContext } from "react";
 
-const CreatePostModal = () => {
-    const [modalVisible, setModalVisible] = useState(false);
+const CreatePostModal: React.FC = () => {
+    const { isModalVisible, closeModal } = useContext(ModalStateContext) as IModalStateContext;
 
     return (
         <Modal
             animationType="slide"
             transparent={true}
-            visible={true}
+            visible={isModalVisible}
             onRequestClose={() => {
-                setModalVisible(!modalVisible);
+                closeModal();
             }}
         >
             <View style={styles.centeredView}>
@@ -18,7 +20,7 @@ const CreatePostModal = () => {
                     <Text style={styles.modalText}>Hello World!</Text>
                     <Pressable
                         style={[styles.button, styles.buttonClose]}
-                        onPress={() => setModalVisible(!modalVisible)}
+                        onPress={() => closeModal()}
                     >
                         <Text style={styles.textStyle}>Hide Modal</Text>
                     </Pressable>
