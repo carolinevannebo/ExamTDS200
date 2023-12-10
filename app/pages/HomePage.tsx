@@ -4,8 +4,9 @@ import React, { useState, useEffect} from 'react';
 import { Text, StyleSheet, Pressable, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
-import { listFiles, uploadImage } from '../services/firebaseconfig';
-import { StorageReference } from 'firebase/storage';
+import { listFiles, uploadImage, db, auth } from '../services/firebaseconfig';
+import { FullMetadata, StorageReference } from 'firebase/storage';
+import { collection, doc, setDoc } from 'firebase/firestore/lite';
 
 const HomePage: React.FC = () => {
     const [permission, requestPermission] = ImagePicker.useCameraPermissions();
@@ -38,7 +39,7 @@ const HomePage: React.FC = () => {
             });
     
             if (!result.canceled) {
-                console.log(result.assets[0].uri);
+                //console.log(result.assets[0].uri);
 
                 const { uri } = result.assets[0];
                 const fileName: string | undefined = uri.split('/').pop() || '';
@@ -47,7 +48,7 @@ const HomePage: React.FC = () => {
                     console.log(progress)
                 );
 
-                console.log(response);
+                console.log("response: ", response);
 
                 listFiles()
                     .then((response) => {
