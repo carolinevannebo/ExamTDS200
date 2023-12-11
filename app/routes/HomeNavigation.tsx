@@ -1,15 +1,15 @@
 // Navigation tabs for logged in users
 
+import { View, Text } from "react-native";
+import { useContext, useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { ModalStateContext, IModalStateContext } from "../contexts/ModalStateContext";
+import { auth } from "../services/firebaseconfig";
+import DownloadService from "../services/DownloadService";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
-import { ModalStateContext, IModalStateContext } from "../contexts/ModalStateContext";
-import { useContext, useEffect, useState } from "react";
 import Assets from "../Assets";
 import IconButton from "../components/IconButton";
-import { View, Text } from "react-native";
-import { getCurrentUser, auth } from "../services/firebaseconfig";
-import { signOut } from "firebase/auth"; // TODO: sjekk om det er success eller error
 
 const Tab = createBottomTabNavigator();
 
@@ -18,7 +18,7 @@ const HomeNavigation: React.FC = () => {
     const [userName, setUserName] = useState<string>('');
 
     useEffect(() => {
-        getCurrentUser()
+        DownloadService.getCurrentUser()
           .then((user) => {
             setUserName(user.userName);
           })
@@ -74,7 +74,7 @@ const HomeNavigation: React.FC = () => {
 
                         <IconButton Icon={() => 
                             <Assets.icons.Logout width={30} height={30} fill="#1d4342"/>
-                        } onPress={() => (signOut(auth))} />
+                        } onPress={() => (auth.signOut())} />
                     </View>
 
                 ),

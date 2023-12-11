@@ -1,9 +1,9 @@
 // User profile page
 
-import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, Image, ScrollView, FlatList } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Text, StyleSheet, View, Image, ScrollView, FlatList, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getCurrentUser, getUserPosts } from '../services/firebaseconfig';
+import DownloadService from '../services/DownloadService';
 import { User } from '../models/User';
 import { Post } from '../models/Post';
 import MapView, { Marker } from 'react-native-maps';
@@ -14,7 +14,8 @@ const ProfilePage: React.FC = () => {
 
     const [user, setUser] = useState<User>();
     const [posts, setPosts] = useState<Post[]>([]);
-    //const [imageUris, setImageUris] = useState<string[]>([]);
+    const [refreshing, setRefreshing] = useState(false);
+    const [imageUris, setImageUris] = useState<string[]>([]);
     const [mapRegion, setMapRegion] = useState({
         latitude: 59.91121,
         longitude: 10.744865,
@@ -22,35 +23,48 @@ const ProfilePage: React.FC = () => {
         longitudeDelta: 0.0421,
     });
 
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        DownloadService.getUserPosts()
+            .then((newPosts) => {
+                setPosts(newPosts);
+                setImageUris(newPosts.map((post) => post.imageUrl));
+            })
+            .catch((error) => {
+                console.error(error.message);
+            })
+            .finally(() => setRefreshing(false));
+    }, []);
+
     useEffect(() => {
-        //loadProfileData();
-    }, [posts]);
+        DownloadService.getUserPosts()
+            .then((posts) => {
+                setPosts(posts);
+                console.log("count: " + posts.length)
+                for (let i = 0; i < posts.length; i++) {
+                    console.log(posts[i].imageUrl);
+                }
+                setImageUris(posts.map((post) => post.imageUrl));
+            })
+            .catch((error) => {
+                console.error(error.message);
+            });
+    }, [onRefresh]);
 
-    const loadProfileData = async () => {
-        await getCurrentUser()
-          .then((user) => {
-            setUser(user);
-            console.log(user);
-
-            getUserPosts()
-                .then((posts) => {
-                    const clearedPosts = posts.filter((post) => 
-                    post.imageName !== '')
-                    .map((post) => post);
-                    setPosts(clearedPosts);
-                    //setImageUris(clearedPosts.map((post) => post.imageUrl));
-                })
-                .catch((error) => {
-                    throw error;
-                });
-          })
-          .catch((error) => {
-            console.error(error.message);
-          });
+    const postItem = ({ item }: { item: Post }) => {
+        return (
+            <View key={item.imageName}>
+                <Image source={{ uri: item.imageUrl }} style={{ width: 100, height: 100 }} />
+            </View>
+        )
     }
 
     return (
         <SafeAreaView style={styles.container}>
+            <ScrollView 
+                style={styles.scroll} 
+                scrollEnabled={true}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
 
                 <View style={styles.section}>
                     <Image style={styles.profilePicture} source={placeholderProfileSrc} />
@@ -79,8 +93,6 @@ const ProfilePage: React.FC = () => {
                     </View>
                 </View>
 
-                <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
-
                 <View style={styles.mapContainer}>
                     <MapView region={mapRegion} style={styles.map}>
                         <Marker coordinate={mapRegion}>
@@ -90,13 +102,9 @@ const ProfilePage: React.FC = () => {
                 </View>
 
                 <View style={[styles.section, styles.gallery]}>
-                    {posts.map((post) => {
-                        return (
-                            <View key={post.imageName}>
-                                <Image source={{ uri: post.imageUrl }} style={{ width: 100, height: 100 }} />
-                            </View>
-                        )
-                    })}
+                    {imageUris.map((uri, index) => (
+                        postItem({ item: posts[index] })
+                    ))}
                 </View>
 
             </ScrollView>
@@ -115,8 +123,9 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     scroll: {
-        flex: 1,
         width: '100%',
+        height: '100%',
+        marginLeft: 15,
     },
     section: {
         flexDirection: 'row',
