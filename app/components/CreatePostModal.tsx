@@ -96,7 +96,7 @@ const CreatePostModal: React.FC = () => {
             setIsLoading(true)
 
             const { uri } = result.assets[0];
-            const fileName: string | undefined = uri.split('/').pop() || '';
+            const fileName: string = uri.split('/').pop() || '';
 
             const lastKnownLocation = await Location.getLastKnownPositionAsync();
             const location = new GeoPoint(lastKnownLocation?.coords.latitude || 0, lastKnownLocation?.coords.longitude || 0);

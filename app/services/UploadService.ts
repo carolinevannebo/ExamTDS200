@@ -1,4 +1,4 @@
-import { Post } from "../models/Post";
+import { Post, User } from "../models";
 import { auth, db } from "./firebaseconfig";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import {  
@@ -76,6 +76,7 @@ const UploadService = (
                     metadata: uploadTask.snapshot.metadata,
                   });
           
+                  // TODO: OMG REFAKTORER DET NED STUPID
                   // Add image to user, sending to firestore
                   const userImagesCollection = collection(db, `users/${auth.currentUser?.uid}/posts`);
                   postDocRef = doc(userImagesCollection, getImageName(imageName));
@@ -119,6 +120,8 @@ const UploadService = (
           
             return response.items;
         };
+
+        const updateUserInfo = async (user: User) => {}
 
         return {
             post,
