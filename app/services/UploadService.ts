@@ -96,7 +96,7 @@ const UploadService = (
         };
 
         const uploadPost = async (withDescription: string) => {
-            // This looks unlogical, should be a better way
+            // This looks unlogical, should be a better way?
             post.description = withDescription;
             console.log('post with description', post);
             setDoc(postDocRef, post);

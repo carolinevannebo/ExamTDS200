@@ -1,5 +1,6 @@
 // Firebase configuration file
 
+import { User } from '../models/User';
 import { Post } from '../models/Post';
 import { Platform } from 'react-native';
 import { navigate } from '../routes/NavigationRef';
@@ -8,13 +9,15 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable, listAll } from 'firebase/storage';
 import { 
   doc,
+  getDoc,
   setDoc,
   GeoPoint,
   collection,
   DocumentData,
   getFirestore,
   serverTimestamp, 
-  DocumentReference
+  DocumentReference,
+  getDocs
 } from 'firebase/firestore/lite';
 import { 
   Auth, 
@@ -66,6 +69,64 @@ onAuthStateChanged(auth, (user) => {
     navigate('pages/WelcomePage');
   }
 });
+
+const getCurrentUser = () => {
+  return new Promise<User>((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        const userDocRef = doc(db, 'users', user.uid);
+        getDoc(userDocRef)
+          .then((docSnap) => {
+            if (docSnap.exists()) {
+              const userData = docSnap.data() as User;
+              resolve(userData);
+            } else {
+              reject(new Error('User document not found'));
+            }
+          })
+          .catch((error) => {
+            reject(new Error('Error getting document: ' + error));
+          })
+          .finally(() => {
+            unsubscribe(); // Stop listening after getting the user data
+          });
+      } else {
+        reject(new Error('No user signed in'));
+        unsubscribe(); // Stop listening if there's no user
+      }
+    });
+  });
+};
+
+const getUserPosts = () => {
+  return new Promise<Post[]>((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        const userDocRef = doc(db, 'users', user.uid);
+        const postsCollectionRef = collection(userDocRef, 'posts');
+
+        getDocs(postsCollectionRef)
+          .then((querySnapshot) => {
+            const posts: Post[] = [];
+            querySnapshot.forEach((doc) => {
+              posts.push(doc.data() as Post);
+            });
+            resolve(posts);
+          })
+          .catch((error) => {
+            reject(new Error('Error getting user posts: ' + error));
+          });
+      } else {
+        reject(new Error('No user signed in'));
+        unsubscribe(); // Stop listening if there's no user
+      }
+    });
+  });
+}
+
+const getFeedPosts = () => {
+  
+}
 
 const getImageName = (fileName: string) => {
   return fileName.slice(0, fileName.lastIndexOf('.'));
@@ -158,4 +219,4 @@ const listFiles = async () => {
   return response.items;
 };
 
-export { app, db, auth, uploadImage, listFiles };
+export { app, db, auth, uploadImage, getCurrentUser, getUserPosts };

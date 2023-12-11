@@ -26,7 +26,4 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    button: {
-        marginTop: 50,
-    }
 });

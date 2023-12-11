@@ -1,3 +1,5 @@
+// Modal for creating a post, TODO: error alerts
+
 import React, { useState, useEffect, useContext} from 'react';
 import { Modal, StyleSheet, Text, Pressable, Alert, View, Image, TextInput, Keyboard} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,7 +17,7 @@ const CreatePostModal: React.FC = () => {
 
     const [permission, requestPermission] = ImagePicker.useCameraPermissions();
     const [result, setResult] = useState<ImagePicker.ImagePickerResult | null>(null);
-    //const [files, setFiles] = useState<File[]>([]); // not used atm
+
     const [file, setFile] = useState<File>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -124,7 +126,7 @@ const CreatePostModal: React.FC = () => {
                     <Assets.icons.Close width={30} height={30} fill="#1d4342"/>
                 } onPress={() => {closeModal()}} style={styles.closeButton} />
 
-                <View style={[styles.content, {marginTop: 300}]}>
+                <View style={{marginTop: 350}}>
                     <Text>Permission not granted: {permission?.status}</Text>
 
                     <Pressable onPress={requestPermission}>
@@ -142,8 +144,7 @@ const CreatePostModal: React.FC = () => {
             visible={isModalVisible}
             onRequestClose={() => {
                 closeModal();
-            }}
-        >
+        }}>
             <SafeAreaView style={styles.container}>
                 <Text style={styles.title}>Share experience</Text>
                 <IconButton Icon={() =>
@@ -164,7 +165,7 @@ const CreatePostModal: React.FC = () => {
                     />
                     </View>
                     ) : ( 
-                        <View style={[styles.content, {marginTop: 300}]}>
+                        <View style={{marginTop: 350}}>
                             <Text>No image uploaded</Text>
                         </View>
                     )
@@ -182,7 +183,7 @@ const CreatePostModal: React.FC = () => {
 
                 <View style={styles.rightToolBar}>
                     <Pressable onPress={() => handleUpload(result!)}>
-                        <Text style={{color: '#fff'}}>Share</Text>
+                        <Text style={{color: '#fff', fontSize: 18}}>Share</Text>
                     </Pressable>
                 </View>
 

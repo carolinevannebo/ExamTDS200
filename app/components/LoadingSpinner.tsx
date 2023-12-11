@@ -1,8 +1,6 @@
 // Simple loading animation for uploading posts
 
 import { Modal, ActivityIndicator, StyleSheet, View } from 'react-native';
-import ModalStateContext, { IModalStateContext } from '../contexts/ModalStateContext';
-import { useContext } from 'react';
 
 interface LoadingSpinnerProps {
     visible: boolean;
@@ -18,7 +16,6 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ visible, close }) => {
         visible={visible}
         onRequestClose={() => {
             close();
-            // Handle modal close if needed
         }}>
             <View style={styles.modalContainer}>
                 <View style={styles.spinnerContainer}>
