@@ -1,6 +1,6 @@
 // Context for create post modal to use across components
 
-import { useState, createContext, ReactNode } from "react";
+import { useState, createContext, ReactNode, useContext } from "react";
 
 export interface IModalStateContext {
     isModalVisible: boolean;
@@ -9,6 +9,7 @@ export interface IModalStateContext {
 }
 
 export const ModalStateContext = createContext<IModalStateContext | null>(null);
+export const useModalStateContext = () => useContext(ModalStateContext) as IModalStateContext;
 
 type Props = { children: ReactNode };
 

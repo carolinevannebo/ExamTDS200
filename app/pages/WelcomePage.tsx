@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { navigate } from '../routes/NavigationRef';
+import { navigate } from '../routes';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import BackgroundImage from '../assets/BackgroundImage';
 

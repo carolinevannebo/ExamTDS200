@@ -2,12 +2,10 @@
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { navigationRef } from "./routes/NavigationRef";
-import WelcomePage from "./pages/WelcomePage";
-import { Register } from "./components/Register";
-import { LogIn } from "./components/LogIn";
-import HomeNavigation from "./routes/HomeNavigation";
-import ModalStateProvider from "./contexts/ModalStateContext";
+import { UserProvider, ModalStateProvider } from "./contexts";
+import { navigationRef, HomeNavigation } from "./routes";
+import { Register, LogIn } from "./components";
+import { WelcomePage } from "./pages";
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -23,9 +21,11 @@ const Layout = () => {
                     <Screen name="components/LogIn" component={LogIn} />
                     <Screen name="routes/HomeNavigation">
                         {() => (
-                            <ModalStateProvider>
-                                <HomeNavigation />
-                            </ModalStateProvider>
+                            <UserProvider>
+                                <ModalStateProvider>
+                                    <HomeNavigation />
+                                </ModalStateProvider>
+                            </UserProvider>
                         )}
                     </Screen>
                 </Navigator>

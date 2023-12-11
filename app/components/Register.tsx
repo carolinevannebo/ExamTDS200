@@ -1,4 +1,5 @@
 // Sign up component for user registration
+// TODO: refactor, you made this quite early
 
 import { Text, View, TextInput, Pressable, StyleSheet } from 'react-native';
 import { useState } from 'react';
@@ -6,7 +7,7 @@ import { db, auth } from '../services/firebaseconfig';
 import { collection, doc, setDoc, query, where, getDocs } from 'firebase/firestore/lite';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { createUserWithEmailAndPassword} from 'firebase/auth';
-import { navigate, goBack } from '../routes/NavigationRef';
+import { navigate, goBack } from '../routes';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BackgroundImage from '../assets/BackgroundImage';
 import IconButton from './IconButton';

@@ -1,19 +1,20 @@
-// Modal for creating a post, TODO: error alerts
+// Modal for creating a post
+// TODO: refactor, error alerts
 
-import React, { useState, useEffect, useContext} from 'react';
-import { Modal, StyleSheet, Text, Pressable, Alert, View, Image, TextInput, Keyboard} from 'react-native';
+import { useState, useEffect } from 'react';
+import { Modal, StyleSheet, Text, Pressable, Alert, View, Image, TextInput, Keyboard } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { GeoPoint } from 'firebase/firestore/lite';
+import { useModalStateContext } from "../contexts";
+import UploadService from '../services/UploadService';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
-import UploadService from '../services/UploadService';
-import { GeoPoint } from 'firebase/firestore/lite';
-import { ModalStateContext, IModalStateContext } from "../contexts/ModalStateContext";
-import IconButton from '../components/IconButton';
+import LoadingSpinner from './LoadingSpinner';
+import IconButton from './IconButton';
 import Assets from '../Assets';
-import LoadingSpinner from '../components/LoadingSpinner';
 
 const CreatePostModal: React.FC = () => {
-    const { isModalVisible, closeModal } = useContext(ModalStateContext) as IModalStateContext;
+    const { isModalVisible, closeModal } = useModalStateContext();
 
     const [permission, requestPermission] = ImagePicker.useCameraPermissions();
     const [result, setResult] = useState<ImagePicker.ImagePickerResult | null>(null);
@@ -119,21 +120,29 @@ const CreatePostModal: React.FC = () => {
 
     if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
         return (
-            <SafeAreaView style={styles.container}>
-                <Text style={styles.title}>Share experience</Text>
+            <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isModalVisible}
+            onRequestClose={() => {
+                closeModal();
+            }}>
+                <SafeAreaView style={styles.container}>
+                    <Text style={styles.title}>Share experience</Text>
 
-                <IconButton Icon={() =>
-                    <Assets.icons.Close width={30} height={30} fill="#1d4342"/>
-                } onPress={() => {closeModal()}} style={styles.closeButton} />
+                    <IconButton Icon={() =>
+                        <Assets.icons.Close width={30} height={30} fill="#1d4342"/>
+                    } onPress={() => {closeModal()}} style={styles.closeButton} />
 
-                <View style={{marginTop: 350}}>
-                    <Text>Permission not granted: {permission?.status}</Text>
+                    <View style={{marginTop: 350}}>
+                        <Text>Permission not granted: {permission?.status}</Text>
 
-                    <Pressable onPress={requestPermission}>
-                        <Text>Request permission</Text>
-                    </Pressable>
-                </View>
-            </SafeAreaView>
+                        <Pressable onPress={requestPermission}>
+                            <Text>Request permission</Text>
+                        </Pressable>
+                    </View>
+                </SafeAreaView>
+            </Modal>
         )
     }
 

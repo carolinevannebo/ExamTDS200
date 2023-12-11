@@ -15,17 +15,54 @@ const DownloadService = (() => {
           const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user) {
               const userDocRef = doc(db, 'users', user.uid);
+
               getDoc(userDocRef)
-                .then((docSnap) => {
-                  if (docSnap.exists()) {
-                    const userData = docSnap.data() as User;
+                .then((querySnapshot) => {
+                  if (querySnapshot.exists()) {
+
+                    const userData = querySnapshot.data() as User;
                     resolve(userData);
+
                   } else {
                     reject(new Error('User document not found'));
                   }
                 })
                 .catch((error) => {
                   reject(new Error('Error getting document: ' + error));
+                })
+                .finally(() => {
+                  unsubscribe(); // Stop listening after getting the user data
+                });
+            } else {
+              reject(new Error('No user signed in'));
+              unsubscribe(); // Stop listening if there's no user
+            }
+          });
+        });
+      };
+
+      const getOtherUsers = async () => {
+        return new Promise<User[]>((resolve, reject) => {
+          const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+              const usersRef = collection(db, 'users');
+      
+              getDocs(usersRef)
+                .then((querySnapshot) => {
+                  const users: User[] = [];
+
+                  querySnapshot.forEach((doc) => {
+                    const userData = doc.data() as User;
+                    
+                    if (userData.uid !== user.uid) {
+                      users.push(userData);
+                    }
+                  });
+      
+                  resolve(users);
+                })
+                .catch((error) => {
+                  reject(new Error('Error getting users: ' + error));
                 })
                 .finally(() => {
                   unsubscribe(); // Stop listening after getting the user data
@@ -123,6 +160,7 @@ const DownloadService = (() => {
 
       return {
         getCurrentUser,
+        getOtherUsers,
         getUserPosts,
         getFeedPosts,
       };

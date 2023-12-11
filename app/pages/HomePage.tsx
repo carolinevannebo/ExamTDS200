@@ -1,42 +1,26 @@
 // User feed page, also known as the home page
 
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Text, StyleSheet, Pressable, View, ScrollView, Image, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CreatePostModal from './CreatePostModal';
+import { useUserContext } from '../contexts';
+import { CreatePostModal, IconButton } from '../components';
+import { Post } from '../models';
 import Assets from '../Assets';
-import DownloadService from '../services/DownloadService';
-import { Post } from '../models/Post';
-import IconButton from '../components/IconButton';
 
 const HomePage: React.FC = () => {
-    const [posts, setPosts] = useState<Post[]>([]);
-    const [testingUris, setTestingUris] = useState<string[]>([]);
+    const { otherUsers, otherPosts, getOtherPosts } = useUserContext();
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        DownloadService.getFeedPosts()
-            .then((newPosts) => {
-                    setPosts(newPosts);
-                    setTestingUris(newPosts.map((post) => post.imageUrl));
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-            .finally(() => setRefreshing(false));
+        getOtherPosts().finally(() => setRefreshing(false));
     }, []);
  
     useEffect(() => {
-        DownloadService.getFeedPosts()
-            .then((posts) => {
-                setPosts(posts);
-                setTestingUris(posts.map((post) => post.imageUrl));
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-
+        if (otherPosts.length === 0) {
+            getOtherPosts();
+        }
     }, [onRefresh]);
 
     const postItem = ({item}: {item: Post}) => {
@@ -64,8 +48,8 @@ const HomePage: React.FC = () => {
             
             <ScrollView
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
-                {testingUris.map((uri, index) => (
-                    postItem({item: posts[index]})
+                {otherPosts.map((value, index) => (
+                    postItem({item: otherPosts[index]})
                 ))}
             </ScrollView>
 

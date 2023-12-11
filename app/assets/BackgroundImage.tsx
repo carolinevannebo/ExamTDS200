@@ -1,16 +1,17 @@
 import React from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { ImageBackground } from 'react-native';
+import Assets from '../Assets';
 
 type BackgroundImageProps = {
     children: React.ReactNode;
 }
 
-const bgImgSourceIOS = require('./images/bg-ios.jpg');
-const bgImgSourceWeb = require('./images/bg-web.jpg');
+//const bgImgSourceIOS = require('./images/bg-ios.jpg');
+//const bgImgSourceWeb = require('./images/bg-web.jpg');
 
 const BackgroundImage = ({children}: BackgroundImageProps) => {
-    const bgImgSource = Platform.OS === 'web' ? bgImgSourceWeb : bgImgSourceIOS;
+    const bgImgSource = Platform.OS === 'web' ? Assets.images.bg.web : Assets.images.bg.ios;
 
     return (
         <ImageBackground source={bgImgSource} style={styles.background}>

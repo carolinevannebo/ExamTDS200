@@ -1,32 +1,37 @@
 // Navigation tabs for logged in users
 
 import { View, Text } from "react-native";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ModalStateContext, IModalStateContext } from "../contexts/ModalStateContext";
+import { useModalStateContext, useUserContext } from "../contexts";
+//import DownloadService from "../services/DownloadService";
 import { auth } from "../services/firebaseconfig";
-import DownloadService from "../services/DownloadService";
-import HomePage from "../pages/HomePage";
-import ProfilePage from "../pages/ProfilePage";
+//import { User } from "../models";
+import { HomePage, ProfilePage } from "../pages";
+import { IconButton } from '../components';
 import Assets from "../Assets";
-import IconButton from "../components/IconButton";
 
 const Tab = createBottomTabNavigator();
 
 const HomeNavigation: React.FC = () => {
-    const { openModal } = useContext(ModalStateContext) as IModalStateContext;
-    const [userName, setUserName] = useState<string>('');
+    const { openModal } = useModalStateContext();
+    const { currentUser, getCurrentUser } = useUserContext();
+    //const [userName, setUserName] = useState<string>('');
+    //const [user, setUser] = useState<User>();
+    const [openSettings, setOpenSettings] = useState<boolean>(false);
 
     useEffect(() => {
-        DownloadService.getCurrentUser()
+        getCurrentUser();
+        /*DownloadService.getCurrentUser()
           .then((user) => {
             setUserName(user.userName);
+            setUser(user);
           })
           .catch((error) => {
             console.error(error.message);
-          });
+          });*/
     }, []);
-    
+
     return (
         <Tab.Navigator initialRouteName="Feed" screenOptions={screenOptions}>
             <Tab.Screen 
@@ -58,7 +63,7 @@ const HomeNavigation: React.FC = () => {
             name="Profile" 
             component={ProfilePage}
             options={{
-                headerTitle: `${userName}`,
+                headerTitle: `${currentUser?.userName ?? "Username"}`,
                 headerTitleStyle: {
                     color: '#1d4342',
                         fontSize: 30,
@@ -70,7 +75,7 @@ const HomeNavigation: React.FC = () => {
                     <View style={{marginRight: 15, flexDirection: "row"}}>
                         <IconButton Icon={() => 
                             <Assets.icons.Gear width={30} height={30} fill="#1d4342"/>
-                        } style={{marginRight: 10}} onPress={() => {}} />
+                        } style={{marginRight: 10}} onPress={() => setOpenSettings(true)} />
 
                         <IconButton Icon={() => 
                             <Assets.icons.Logout width={30} height={30} fill="#1d4342"/>

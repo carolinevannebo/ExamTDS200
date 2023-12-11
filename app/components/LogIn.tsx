@@ -1,11 +1,11 @@
 // Sign in component for users to log in to their account
+// TODO: refactor, you made this quite early
 
-import { Text, View, TextInput, Pressable } from 'react-native';
 import { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { navigate, goBack } from '../routes/NavigationRef';
-import { StyleSheet } from 'react-native';
+import { Text, View, TextInput, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { navigate, goBack } from '../routes';
 import BackgroundImage from '../assets/BackgroundImage';
 import IconButton from './IconButton';
 import Assets from '../Assets';
