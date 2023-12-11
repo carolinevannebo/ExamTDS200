@@ -1,26 +1,20 @@
 // User profile page
+// TODO: Refaktorer etter klokka 02:00, limit is reached:)))
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View, Image, ScrollView, FlatList, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-//import DownloadService from '../services/DownloadService';
 import { useUserContext } from '../contexts';
-//import { User } from '../models/User';
+import { SettingsModal } from '../components';
 import { Post } from '../models';
 import MapView, { Marker } from 'react-native-maps';
 import Assets from '../Assets';
 
-// TODO: Refaktorer etter klokka 02:00, limit is reached:)))
 const ProfilePage: React.FC = () => {
-    const { currentUser, currentUserPosts, getCurrentUserPosts } = useUserContext();
-
-    //const placeholderProfileSrc = require('../assets/images/placeholder-profile.jpeg');
-    //const placeholderPostSrc = require('../assets/images/test-upload.jpg');
-
+    const { currentUser, currentUserPosts, getCurrentUser, getCurrentUserPosts } = useUserContext();
     //const [user, setUser] = useState<User>();
     //const [posts, setPosts] = useState<Post[]>([]);
     const [refreshing, setRefreshing] = useState(false);
-    //const [imageUris, setImageUris] = useState<string[]>([]);
     const [mapRegion, setMapRegion] = useState({
         latitude: 59.91121,
         longitude: 10.744865,
@@ -43,7 +37,13 @@ const ProfilePage: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        getCurrentUserPosts()
+        if (currentUser === null) {
+            getCurrentUser();
+        }
+
+        if (currentUserPosts.length === 0) {
+            getCurrentUserPosts();
+        }
         /*DownloadService.getUserPosts()
             .then((posts) => {
                 setPosts(posts);
@@ -68,6 +68,7 @@ const ProfilePage: React.FC = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <SettingsModal />
             <ScrollView 
                 style={styles.scroll} 
                 scrollEnabled={true}

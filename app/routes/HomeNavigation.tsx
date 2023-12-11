@@ -4,9 +4,6 @@ import { View, Text } from "react-native";
 import { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useModalStateContext, useUserContext } from "../contexts";
-//import DownloadService from "../services/DownloadService";
-import { auth } from "../services/firebaseconfig";
-//import { User } from "../models";
 import { HomePage, ProfilePage } from "../pages";
 import { IconButton } from '../components';
 import Assets from "../Assets";
@@ -16,12 +13,11 @@ const Tab = createBottomTabNavigator();
 const HomeNavigation: React.FC = () => {
     const { openModal } = useModalStateContext();
     const { currentUser, getCurrentUser } = useUserContext();
-    //const [userName, setUserName] = useState<string>('');
-    //const [user, setUser] = useState<User>();
-    const [openSettings, setOpenSettings] = useState<boolean>(false);
 
     useEffect(() => {
-        getCurrentUser();
+        if (currentUser === null) {
+            getCurrentUser();
+        }
         /*DownloadService.getCurrentUser()
           .then((user) => {
             setUserName(user.userName);
@@ -72,16 +68,9 @@ const HomeNavigation: React.FC = () => {
                         right: -25,
                 },
                 headerRight: () => (
-                    <View style={{marginRight: 15, flexDirection: "row"}}>
-                        <IconButton Icon={() => 
-                            <Assets.icons.Gear width={30} height={30} fill="#1d4342"/>
-                        } style={{marginRight: 10}} onPress={() => setOpenSettings(true)} />
-
-                        <IconButton Icon={() => 
-                            <Assets.icons.Logout width={30} height={30} fill="#1d4342"/>
-                        } onPress={() => (auth.signOut())} />
-                    </View>
-
+                    <IconButton Icon={() => 
+                        <Assets.icons.Gear width={30} height={30} fill="#1d4342"/>
+                    } style={{marginRight: 10}} onPress={openModal} />
                 ),
                 tabBarIcon: ({focused}) => (
                     <View style={{opacity: focused ? 0.95 : 0.5}}>

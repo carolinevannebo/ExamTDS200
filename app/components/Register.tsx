@@ -9,6 +9,7 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { createUserWithEmailAndPassword} from 'firebase/auth';
 import { navigate, goBack } from '../routes';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import BackgroundImage from '../assets/BackgroundImage';
 import IconButton from './IconButton';
 import Assets from '../Assets';
@@ -18,12 +19,17 @@ export const Register: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repassword, setRepassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [name, setName] = useState('');
   const [userName, setUserName] = useState('');
   const [isValid, setIsValid] = useState({
     bool: true,
     message: 'Please fill out all fields'
   });
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  }
 
   const validateField = (field: string) => {
     if (field === '') {
@@ -141,21 +147,31 @@ export const Register: React.FC = () => {
             onChangeText={(email) => setEmail(email)}
             />
 
-            <TextInput
-            style={styles.textField}
-            placeholder='Password'
-            placeholderTextColor={'#9ca3af'}
-            value={password}
-            onChangeText={(password) => setPassword(password)}
-            />
+            <View style={[styles.textField, styles.passwordField]}>
+              <TextInput
+              placeholder='Password'
+              placeholderTextColor={'#9ca3af'}
+              value={password}
+              secureTextEntry={!isPasswordVisible}
+              onChangeText={(password) => setPassword(password)}
+              />
+              <Pressable onPress={() => togglePasswordVisibility()}>
+                <MaterialCommunityIcons name={isPasswordVisible ? 'eye-off' : 'eye'} size={20} color="#451a03" />
+              </Pressable>
+            </View>
 
-            <TextInput
-            style={styles.textField}
-            placeholder='Repeat Password'
-            placeholderTextColor={'#9ca3af'}
-            value={repassword}
-            onChangeText={(repassword) => setRepassword(repassword)}
-            />
+            <View style={[styles.textField, styles.passwordField]}>
+              <TextInput
+              placeholder='Repeat Password'
+              placeholderTextColor={'#9ca3af'}
+              value={repassword}
+              secureTextEntry={!isPasswordVisible}
+              onChangeText={(repassword) => setRepassword(repassword)}
+              />
+              <Pressable onPress={() => togglePasswordVisibility()}>
+                  <MaterialCommunityIcons name={isPasswordVisible ? 'eye-off' : 'eye'} size={20} color="#451a03" />
+                </Pressable>
+            </View>
 
             <Pressable 
             style={styles.button}
@@ -212,6 +228,10 @@ const styles = StyleSheet.create({
       padding: 10,
       width: 240,
       color: '#451a03',
+  },
+  passwordField: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
   },
   button: {
       borderRadius: 10,

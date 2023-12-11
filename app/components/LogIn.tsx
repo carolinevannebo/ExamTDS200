@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import { Text, View, TextInput, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { navigate, goBack } from '../routes';
 import BackgroundImage from '../assets/BackgroundImage';
@@ -11,9 +12,13 @@ import IconButton from './IconButton';
 import Assets from '../Assets';
 
 export const LogIn: React.FC = () => {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+      }
 
     const onLogin = () => {
         const auth = getAuth();
@@ -41,14 +46,19 @@ export const LogIn: React.FC = () => {
                 value={email}
                 onChangeText={(email) => setEmail(email)}
                 />
-                
-                <TextInput
-                style={styles.textField}
-                placeholder='Password'
-                placeholderTextColor={'#9ca3af'}
-                value={password}
-                onChangeText={(password) => setPassword(password)}
-                />
+
+                <View style={[styles.textField, styles.passwordField]}>
+                    <TextInput
+                    placeholder='Password'
+                    placeholderTextColor={'#9ca3af'}
+                    value={password}
+                    secureTextEntry={!isPasswordVisible}
+                    onChangeText={(password) => setPassword(password)}
+                    />
+                    <Pressable onPress={() => togglePasswordVisibility()}>
+                        <MaterialCommunityIcons name={isPasswordVisible ? 'eye-off' : 'eye'} size={20} color="#451a03" />
+                    </Pressable>
+                </View>
                 
                 <Pressable 
                 style={styles.button}
@@ -106,6 +116,10 @@ const styles = StyleSheet.create({
         padding: 10,
         width: 240,
         color: '#451a03',
+    },
+    passwordField: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     button: {
         borderRadius: 10,

@@ -7,9 +7,6 @@ type BackgroundImageProps = {
     children: React.ReactNode;
 }
 
-//const bgImgSourceIOS = require('./images/bg-ios.jpg');
-//const bgImgSourceWeb = require('./images/bg-web.jpg');
-
 const BackgroundImage = ({children}: BackgroundImageProps) => {
     const bgImgSource = Platform.OS === 'web' ? Assets.images.bg.web : Assets.images.bg.ios;
 
