@@ -1,6 +1,7 @@
 import Add from './assets/icons/Add.svg'
 import Back from './assets/icons/Back.svg'
 import Camera from './assets/icons/Camera.svg'
+import Heart from './assets/icons/Heart.svg'
 import Home from './assets/icons/Home.svg'
 import Gear from './assets/icons/Gear.svg'
 import Image from './assets/icons/Image.svg'
@@ -14,6 +15,7 @@ export const Assets = {
         Back,
         Camera,
         Close,
+        Heart,
         Home,
         Gear,
         Image,

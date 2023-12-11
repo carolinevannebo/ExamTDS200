@@ -124,8 +124,41 @@ const getUserPosts = () => {
   });
 }
 
-const getFeedPosts = () => {
-  
+const getFeedPosts = async () => {
+  try {
+    const currentUser = await getCurrentUser();
+    
+    // Get posts from other users
+    const postsSnapshot = await getDocs(collection(db, 'users'));
+    const otherUsersPosts: Post[] = [];
+
+    for (const userDoc of postsSnapshot.docs) {
+      const userId = userDoc.id;
+      
+      // Skip the current user's posts
+      if (userId === currentUser.uid) {
+        continue;
+      }
+
+      const userPostsCollectionRef = collection(db, `users/${userId}/posts`);
+      const userPostsSnapshot = await getDocs(userPostsCollectionRef);
+
+      userPostsSnapshot.forEach((postDoc) => {
+        const post = postDoc.data() as Post;
+        otherUsersPosts.push(post);
+      });
+    }
+
+    // Sort posts by createdAt timestamp in descending order
+    //const sortedPosts = otherUsersPosts.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
+    // Take the last 20 posts
+    //const last20Posts = sortedPosts.slice(0, 20);
+
+    return otherUsersPosts;
+  } catch (error) {
+    console.error('Error getting feed posts:', error);
+    throw error;
+  }
 }
 
 const getImageName = (fileName: string) => {
@@ -219,4 +252,4 @@ const listFiles = async () => {
   return response.items;
 };
 
-export { app, db, auth, uploadImage, getCurrentUser, getUserPosts };
+export { app, db, auth, uploadImage, getCurrentUser, getUserPosts, getFeedPosts };
