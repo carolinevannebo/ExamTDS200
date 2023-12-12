@@ -101,8 +101,8 @@ const CreatePostModal: React.FC = () => {
             const lastKnownLocation = await Location.getLastKnownPositionAsync();
             const location = new GeoPoint(lastKnownLocation?.coords.latitude || 0, lastKnownLocation?.coords.longitude || 0);
             
-            await UploadService.uploadImage(uri, fileName, location, (progress: any) => 
-                console.log(progress)
+            await UploadService.uploadImage(uri, fileName, (progress: any) => 
+                console.log(progress), location
             ).then(() => {
                 UploadService.uploadPost(imageDescription);
                 // check if successful:

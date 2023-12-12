@@ -4,15 +4,17 @@
 import { useState, useEffect } from 'react';
 import { Modal, StyleSheet, Text, Pressable, Alert, View, Image, TextInput, Keyboard } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useModalStateContext } from "../contexts";
+import { useModalStateContext, useUserContext } from "../contexts";
 import * as ImagePicker from 'expo-image-picker';
 import IconButton from './IconButton';
 import Assets from '../Assets';
 import { auth } from '../services/firebaseconfig';
 import LoadingSpinner from './LoadingSpinner';
+import UploadService from '../services/UploadService';
 
 const SettingsModal: React.FC = () => {
     const { isModalVisible, closeModal } = useModalStateContext();
+    const { currentUser, getCurrentUser } = useUserContext();
 
     const [permission, requestPermission] = ImagePicker.useCameraPermissions();
     const [result, setResult] = useState<ImagePicker.ImagePickerResult | null>(null);
@@ -23,6 +25,16 @@ const SettingsModal: React.FC = () => {
     const [profilePicture, setProfilePicture] = useState<string>("");
     const [displayName, setDisplayName] = useState<string>("");
     const [bio, setBio] = useState<string>("");
+
+    useEffect(() => {
+        if (!currentUser) {
+            getCurrentUser();
+        }
+
+        setProfilePicture(currentUser?.profilePicture || "");
+        setDisplayName(currentUser?.displayName || "");
+        setBio(currentUser?.bio || "");
+    }, []);
 
     // TODO: refaktorer funksjoner du bruker flere steder til en egen fil
     const checkPermission = async () => {
@@ -59,24 +71,26 @@ const SettingsModal: React.FC = () => {
         auth.signOut();
     }
 
-    const handleSave = () => {
-        // set loading to true
-        // upload image to storage and get url (could be done in the background after choosing image... hmm)
-        // use current user data, overrite it with new data
-        // pass new user data to uploadservice, where it will be uploaded to firestore
-
+    const handleSave = async () => {
         if (!result!.canceled) {
             setIsLoading(true);
 
             const { uri } = result!.assets[0];
             const filename = uri.split('/').pop() || '';
 
-            // await uploadservcie upload image (refactor it)
-            // then uploadservice updateuserdata (todo)
-            // set loading to false
-            // set file to undefined
-            // close modal
-            // catch errors
+            await UploadService.uploadImage(uri, filename, (progress: any) => console.log(progress))
+            .then(() => {
+                displayName !== "" ? UploadService.uploadDisplayName(displayName) : () => {};
+                profilePicture !== "" ? UploadService.uploadProfilePicture() : () => {};
+                bio !== "" ? UploadService.uploadBio(bio) : () => {};
+            })
+            .catch((error) => {
+                Alert.alert('Error', (error as Error).message);
+            })
+            .finally(() => { 
+                setIsLoading(false); 
+                closeModal();
+            })
         }
     }
 
