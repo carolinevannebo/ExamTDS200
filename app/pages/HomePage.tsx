@@ -7,17 +7,17 @@ import { useUserContext } from '../contexts';
 import { CreatePostModal, PostItem, ScreenTemplate } from '../components';
 
 const HomePage: React.FC = () => {
-    const { otherUsers, otherPosts, getOtherPosts } = useUserContext();
+    const { otherUsers, getOtherUsers } = useUserContext();
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        getOtherPosts().finally(() => setRefreshing(false));
+        getOtherUsers().finally(() => setRefreshing(false));
     }, []);
  
     useEffect(() => {
-        if (otherPosts.length === 0) {
-            getOtherPosts();
+        if (otherUsers.length === 0) {
+            getOtherUsers();
         }
     }, [onRefresh]);
 
@@ -28,8 +28,10 @@ const HomePage: React.FC = () => {
             
             <ScrollView
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
-                {otherPosts.map((_, index) => (
-                    <PostItem key={index} item={otherPosts[index]} />
+                {otherUsers.map((user, index) => (
+                    user.posts.map((post, index) => (
+                        <PostItem key={`${user.uid}-${index}`} item={post} user={user} />
+                    ))
                 ))}
             </ScrollView>
 
@@ -39,7 +41,12 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
+/**<ScrollView
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
+                {otherPosts.map((_, index) => (
+                    <PostItem key={index} item={otherPosts[index]} />
+                ))}
+            </ScrollView> */
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -7,6 +7,7 @@ import { useModalStateContext, useUserContext } from "../contexts";
 import { HomePage, ProfilePage } from "../pages";
 import { IconButton, ScreenTemplate } from '../components';
 import Assets from "../Assets";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Tab = createBottomTabNavigator();
 
@@ -94,12 +95,16 @@ const HomeNavigation: React.FC = () => {
 const screenOptions = {
     tabBarActiveTintColor: '#f0fdfa',
     tabBarInactiveTintColor: '#ccd5d5',
-    tabBarStyle: { 
-        backgroundColor: '#365857',
-        borderTopColor: '#1d4342',
-        padding: 10
-        
+    tabBarStyle: {
+        borderTopWidth: 0,
+        padding: 10,
     },
+    tabBarBackground: () => (
+        <LinearGradient
+        colors={['#365857', '#042f2e']}
+        style={{ flex: 1, padding: 10 }}
+        locations={[0, 1]}/>
+    ),
     headerTransparent: true,
 }
 

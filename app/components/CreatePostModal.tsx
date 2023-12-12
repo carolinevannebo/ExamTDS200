@@ -12,6 +12,7 @@ import * as Location from 'expo-location';
 import LoadingSpinner from './LoadingSpinner';
 import IconButton from './IconButton';
 import Assets from '../Assets';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const CreatePostModal: React.FC = () => {
     const { isModalVisible, closeModal } = useModalStateContext();
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccd5d5',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginTop: 30
+        marginTop: 30,
     },
     title: {
         color: '#1d4342',

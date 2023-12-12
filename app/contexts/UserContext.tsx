@@ -12,7 +12,7 @@ export interface IUserContext {
     getCurrentUser: () => Promise<void>;
     getOtherUsers: () => Promise<void>;
     getCurrentUserPosts: () => Promise<void>;
-    getOtherPosts: () => Promise<void>;
+    //getOtherPosts: () => Promise<void>;
 }
 
 export const UserContext = createContext<IUserContext | null>(null);
@@ -60,15 +60,21 @@ const UserProvider = ({ children }: Props) => {
         }
     };
 
-    const getOtherPosts = async () => {
+    /*const getOtherPosts = async () => {
         try {
             console.log("getOtherPosts called, using firebase")
-            const posts = await DownloadService.getFeedPosts()
-            setOtherPosts(posts);
+            //const posts = await DownloadService.getFeedPosts()
+            //setOtherPosts(posts);
+
+            otherUsers.forEach(async (user) => {
+                user.posts.forEach(async (post) => {
+                    setOtherPosts([...otherPosts, post]);
+                });
+            });
         } catch (error) {
             console.error(error);
         }
-    };
+    };*/
 
     return (
         <UserContext.Provider 
@@ -80,7 +86,7 @@ const UserProvider = ({ children }: Props) => {
             getCurrentUser, 
             getOtherUsers,
             getCurrentUserPosts,
-            getOtherPosts
+            //getOtherPosts
         }}>
             {children}
         </UserContext.Provider>

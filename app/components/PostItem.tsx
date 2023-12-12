@@ -1,24 +1,25 @@
 import { View, Text, Image, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import IconButton from './IconButton';
-import { Post } from "../models";
+import { Post, User } from "../models";
 import Assets from "../Assets";
 
 interface PostItemProps {
+    user: User;
     item: Post;
 }
 
-const PostItem: React.FC<PostItemProps> = ({item}: PostItemProps) => {
+const PostItem: React.FC<PostItemProps> = ({item, user}: PostItemProps) => {
     return (
-        <View key={item.imageName} style={{}}>
+        <View key={item.imageName} style={{marginVertical: 7}}>
             <Image source={Assets.images.placeholder.profile} style={styles.profilePicture} />
-            <Image source={{uri: item.imageUrl}} style={{width: 390, height: 390}} />
+            <Image source={{uri: item.imageUrl}} style={{width: 360, height: 360}} />
 
             <LinearGradient 
             colors={["rgba(154, 171, 171, 0.8)", "rgba(154, 171, 171, 0.3)"]}
             start={{x: 0, y: 0}} end={{x: 1, y: 0}}
             style={styles.toolbar}>
-                <Text>Username</Text>
+                <Text>{user.displayName}</Text>
                 <IconButton 
                     Icon={() => <Assets.icons.Heart width={30} height={30} fill="#021c1b"/>} 
                     onPress={() => {}} />
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
         position: "absolute", 
         left: 0, 
         bottom: 0, 
-        width: 390, 
+        width: 360, 
         height: 40, 
         padding: 10
     },

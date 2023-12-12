@@ -14,7 +14,7 @@ const ScreenTemplate = ({ children, headerPadding }: ScreenTemplateProps) => {
      
     return (
         <LinearGradient 
-        colors={['#ccd5d5', '#365857']}
+        colors={['#688281', '#365857']}
         style={{ flex: 1, paddingTop: headerPadding ? headerHeight : 0 }}
         locations={[0, 1]}
         >
