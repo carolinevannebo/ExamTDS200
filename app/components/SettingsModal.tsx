@@ -31,9 +31,14 @@ const SettingsModal: React.FC = () => {
             getCurrentUser();
         }
 
-        setProfilePicture(currentUser?.profilePicture || "");
-        setDisplayName(currentUser?.displayName || "");
-        setBio(currentUser?.bio || "");
+        console.log("profile picture", currentUser?.profilePicture);
+        console.log("display name", currentUser?.displayName);
+        console.log("bio", currentUser?.bio);
+
+
+        currentUser?.profilePicture ? setProfilePicture(currentUser?.profilePicture) : () => {};
+        currentUser?.displayName ? setDisplayName(currentUser?.displayName) : () => {};
+        currentUser?.bio ? setBio(currentUser?.bio) : () => {};
     }, []);
 
     // TODO: refaktorer funksjoner du bruker flere steder til en egen fil
@@ -72,26 +77,26 @@ const SettingsModal: React.FC = () => {
     }
 
     const handleSave = async () => {
-        if (!result!.canceled) {
-            setIsLoading(true);
-
+        setIsLoading(true);
+        console.log("display name", displayName);
+        displayName !== currentUser?.displayName ? UploadService.uploadDisplayName(displayName) : () => {};
+        bio !== "" ? UploadService.uploadBio(bio) : () => {};
+        
+        if (result && !result!.canceled) {
             const { uri } = result!.assets[0];
             const filename = uri.split('/').pop() || '';
 
             await UploadService.uploadImage(uri, filename, (progress: any) => console.log(progress))
             .then(() => {
-                displayName !== "" ? UploadService.uploadDisplayName(displayName) : () => {};
-                profilePicture !== "" ? UploadService.uploadProfilePicture() : () => {};
-                bio !== "" ? UploadService.uploadBio(bio) : () => {};
+                profilePicture !== currentUser?.profilePicture ? UploadService.uploadProfilePicture() : () => {};
             })
             .catch((error) => {
                 Alert.alert('Error', (error as Error).message);
             })
-            .finally(() => { 
-                setIsLoading(false); 
-                closeModal();
-            })
         }
+        getCurrentUser();
+        setIsLoading(false); 
+        closeModal();
     }
 
     const renderToolbar = () => {

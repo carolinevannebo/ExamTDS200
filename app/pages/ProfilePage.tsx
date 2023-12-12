@@ -2,7 +2,7 @@
 // TODO: Refaktorer etter klokka 02:00, limit is reached:)))
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Text, StyleSheet, View, Image, ScrollView, FlatList, RefreshControl } from 'react-native';
+import { Text, StyleSheet, View, Image, ScrollView, FlatList, RefreshControl, ImageErrorEventData, ImageLoadEventData, ImageComponent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserContext } from '../contexts';
 import { SettingsModal } from '../components';
@@ -24,6 +24,7 @@ const ProfilePage: React.FC = () => {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
+        getCurrentUser().finally(() => setRefreshing(false));
         getCurrentUserPosts().finally(() => setRefreshing(false));
         /*DownloadService.getUserPosts()
             .then((newPosts) => {
@@ -58,13 +59,39 @@ const ProfilePage: React.FC = () => {
             });*/
     }, [onRefresh]);
 
+    const renderImage = () => {
+        console.log(currentUser?.profilePicture);
+        if (currentUser?.profilePicture !== "default") { // use old upload if any
+            return (
+                <Image style={styles.profilePicture} source={{uri: currentUser?.profilePicture}} />
+            )
+        } else { // use placeholder
+            return (
+                <Image style={styles.profilePicture} source={Assets.images.placeholder.profile} />
+            )
+        }
+    }
+
     const postItem = ({ item }: { item: Post }) => {
+        Image.prefetch(item.imageUrl)
+        .catch((error: ImageErrorEventData) => {
+            console.error(error);
+            return (
+                <View>
+                    <Text>Error</Text>
+                </View>
+            )
+        });
+
         return (
             <View key={item.imageName}>
-                <Image source={{ uri: item.imageUrl }} style={{ width: 100, height: 100 }} />
+                <Image
+                source={{ uri: item.imageUrl}} 
+                style={{ width: 100, height: 100 }}
+                onError={() => {}} />
             </View>
         )
-    }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -75,7 +102,8 @@ const ProfilePage: React.FC = () => {
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
 
                 <View style={styles.section}>
-                    <Image style={styles.profilePicture} source={Assets.images.placeholder.profile} />
+                    {//<Image style={styles.profilePicture} source={Assets.images.placeholder.profile} />
+                    renderImage()}
 
                     <View style={styles.headerTextBox}>
                         <Text style={[styles.headerTitle, styles.text]}>{currentUser?.displayName ?? "Set name in settings"}</Text>

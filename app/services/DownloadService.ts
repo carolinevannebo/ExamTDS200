@@ -20,8 +20,19 @@ const DownloadService = (() => {
                 .then((querySnapshot) => {
                   if (querySnapshot.exists()) {
 
-                    const userData = querySnapshot.data() as User;
-                    resolve(userData);
+                    const userData = querySnapshot.data();
+                    const user: User = {
+                      uid: auth.currentUser?.uid,
+                      bio: userData.bio,
+                      email: userData.email,
+                      followers: userData.followerCount,
+                      following: userData.followingCount,
+                      profilePicture: userData.image,
+                      displayName: userData.name,
+                      userName: userData.userName,
+                      posts: userData.posts,
+                    };
+                    resolve(user);
 
                   } else {
                     reject(new Error('User document not found'));
