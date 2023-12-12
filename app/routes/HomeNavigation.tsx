@@ -5,14 +5,14 @@ import { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useModalStateContext, useUserContext } from "../contexts";
 import { HomePage, ProfilePage } from "../pages";
-import { IconButton } from '../components';
+import { IconButton, ScreenTemplate } from '../components';
 import Assets from "../Assets";
 
 const Tab = createBottomTabNavigator();
 
 const HomeNavigation: React.FC = () => {
     const { openModal } = useModalStateContext();
-    const { currentUser, getCurrentUser } = useUserContext();
+    const { currentUser, currentUserPosts, getCurrentUser, getCurrentUserPosts } = useUserContext();
 
     useEffect(() => {
         if (currentUser === null) {
@@ -38,7 +38,7 @@ const HomeNavigation: React.FC = () => {
                 headerLeft: () => (
                     <Text style={{
                         color: '#1d4342',
-                        fontSize: 30,
+                        fontSize: 23,
                         fontWeight: '400',
                         marginLeft: 20
                     }}>Explore</Text>
@@ -57,16 +57,16 @@ const HomeNavigation: React.FC = () => {
 
             <Tab.Screen 
             name="Profile" 
-            component={ProfilePage}
             options={{
-                headerTitle: `${currentUser?.userName ?? "Username"}`,
-                headerTitleStyle: {
-                    color: '#1d4342',
-                        fontSize: 30,
+                headerTitle: "",
+                headerLeft: () => (
+                    <Text style={{
+                        color: '#1d4342',
+                        fontSize: 23,
                         fontWeight: '400',
-                        position: 'absolute',
-                        right: -25,
-                },
+                        marginLeft: 20,
+                    }}>{currentUser?.userName ?? "Username"}</Text>
+                ),
                 headerRight: () => (
                     <IconButton Icon={() => 
                         <Assets.icons.Gear width={30} height={30} fill="#1d4342"/>
@@ -77,7 +77,16 @@ const HomeNavigation: React.FC = () => {
                         <Assets.icons.Profile width={30} height={30} fill="#fff"/>
                     </View>
                 )
-            }}/>
+            }}>
+                {() => 
+                    <ProfilePage 
+                        user={currentUser} 
+                        posts={currentUserPosts} 
+                        getUser={getCurrentUser} 
+                        getPosts={getCurrentUserPosts} 
+                    />
+                }
+            </Tab.Screen>
         </Tab.Navigator>
     )
 }
@@ -87,11 +96,11 @@ const screenOptions = {
     tabBarInactiveTintColor: '#ccd5d5',
     tabBarStyle: { 
         backgroundColor: '#365857',
+        borderTopColor: '#1d4342',
         padding: 10
+        
     },
-    headerStyle: {
-        backgroundColor: '#ccd5d5',
-    },
+    headerTransparent: true,
 }
 
 export default HomeNavigation;

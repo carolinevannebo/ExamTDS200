@@ -118,9 +118,9 @@ const SettingsModal: React.FC = () => {
             return (
                 <Image style={styles.profilePicture} source={{uri: file.name}} />
             )
-        } else if (profilePicture !== "") { // use old upload if any
+        } else if (currentUser?.profilePicture !== "default") { // use old upload if any
             return (
-                <Image style={styles.profilePicture} source={{uri: profilePicture}} />
+                <Image style={styles.profilePicture} source={{uri: currentUser?.profilePicture}} />
             )
         } else { // use placeholder
             return (
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     title: {
         color: '#1d4342',
         position: 'absolute',
-        fontSize: 30,
+        fontSize: 23,
         top: 20,
         left: 20,
     },

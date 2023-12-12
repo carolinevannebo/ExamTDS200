@@ -10,7 +10,7 @@ import { createUserWithEmailAndPassword} from 'firebase/auth';
 import { navigate, goBack } from '../routes';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import BackgroundImage from '../assets/BackgroundImage';
+import BackgroundImage from './BackgroundImage';
 import IconButton from './IconButton';
 import Assets from '../Assets';
 

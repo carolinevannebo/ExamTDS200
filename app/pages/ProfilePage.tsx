@@ -4,16 +4,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View, Image, ScrollView, FlatList, RefreshControl, ImageErrorEventData, ImageLoadEventData, ImageComponent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useUserContext } from '../contexts';
-import { SettingsModal } from '../components';
-import { Post } from '../models';
+import { ScreenTemplate, SettingsModal } from '../components';
+import { Post, User } from '../models';
 import MapView, { Marker } from 'react-native-maps';
 import Assets from '../Assets';
 
-const ProfilePage: React.FC = () => {
-    const { currentUser, currentUserPosts, getCurrentUser, getCurrentUserPosts } = useUserContext();
-    //const [user, setUser] = useState<User>();
-    //const [posts, setPosts] = useState<Post[]>([]);
+interface ProfilePageProps {
+    user: User | null;
+    posts: Post[];
+    getUser: () => Promise<void>
+    getPosts: () => Promise<void>
+}
+
+const ProfilePage: React.FC<ProfilePageProps> = ({user, posts, getUser, getPosts}) => {
     const [refreshing, setRefreshing] = useState(false);
     const [mapRegion, setMapRegion] = useState({
         latitude: 59.91121,
@@ -24,46 +27,25 @@ const ProfilePage: React.FC = () => {
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        getCurrentUser().finally(() => setRefreshing(false));
-        getCurrentUserPosts().finally(() => setRefreshing(false));
-        /*DownloadService.getUserPosts()
-            .then((newPosts) => {
-                setPosts(newPosts);
-                setImageUris(newPosts.map((post) => post.imageUrl));
-            })
-            .catch((error) => {
-                console.error(error.message);
-            })
-            .finally(() => setRefreshing(false));*/
+        getUser().finally(() => setRefreshing(false));
+        getPosts().finally(() => setRefreshing(false));
     }, []);
 
     useEffect(() => {
-        if (currentUser === null) {
-            getCurrentUser();
+        if (user === null) {
+            getUser();
         }
 
-        if (currentUserPosts.length === 0) {
-            getCurrentUserPosts();
+        if (posts.length === 0) {
+            getPosts();
         }
-        /*DownloadService.getUserPosts()
-            .then((posts) => {
-                setPosts(posts);
-                console.log("count: " + posts.length)
-                for (let i = 0; i < posts.length; i++) {
-                    console.log(posts[i].imageUrl);
-                }
-                setImageUris(posts.map((post) => post.imageUrl));
-            })
-            .catch((error) => {
-                console.error(error.message);
-            });*/
     }, [onRefresh]);
 
     const renderImage = () => {
-        console.log(currentUser?.profilePicture);
-        if (currentUser?.profilePicture !== "default") { // use old upload if any
+        console.log(user?.profilePicture);
+        if (user?.profilePicture !== "default") { // use old upload if any
             return (
-                <Image style={styles.profilePicture} source={{uri: currentUser?.profilePicture}} />
+                <Image style={styles.profilePicture} source={{uri: user?.profilePicture}} />
             )
         } else { // use placeholder
             return (
@@ -72,7 +54,7 @@ const ProfilePage: React.FC = () => {
         }
     }
 
-    const postItem = ({ item }: { item: Post }) => {
+    const galleryItem = ({ item }: { item: Post }) => {
         Image.prefetch(item.imageUrl)
         .catch((error: ImageErrorEventData) => {
             console.error(error);
@@ -87,27 +69,28 @@ const ProfilePage: React.FC = () => {
             <View key={item.imageName}>
                 <Image
                 source={{ uri: item.imageUrl}} 
-                style={{ width: 100, height: 100 }}
+                style={{ width: 110, height: 110, marginVertical: 5, borderRadius: 5 }}
                 onError={() => {}} />
             </View>
         )
     };
 
     return (
+        <ScreenTemplate headerPadding={0}>
         <SafeAreaView style={styles.container}>
             <SettingsModal />
             <ScrollView 
                 style={styles.scroll} 
                 scrollEnabled={true}
+                scrollToOverflowEnabled={true}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
 
                 <View style={styles.section}>
-                    {//<Image style={styles.profilePicture} source={Assets.images.placeholder.profile} />
-                    renderImage()}
+                    {renderImage()}
 
                     <View style={styles.headerTextBox}>
-                        <Text style={[styles.headerTitle, styles.text]}>{currentUser?.displayName ?? "Set name in settings"}</Text>
-                        <Text style={styles.text}>{currentUser?.bio !== "" ? currentUser?.bio : "Write biography"}</Text>
+                        <Text style={[styles.headerTitle, styles.text]}>{user?.displayName ?? "Username"}</Text>
+                        <Text style={styles.text}>{user?.bio !== "" ? user?.bio : "No biography provided"}</Text>
                         
                         <View style={styles.headerInfo}>
                             <View style={styles.headerInfoText}>
@@ -137,14 +120,15 @@ const ProfilePage: React.FC = () => {
                     </MapView>
                 </View>
 
-                <View style={[styles.section, styles.gallery]}>
-                    {currentUserPosts.map((value, index) => (
-                        postItem({ item: currentUserPosts[index] })
+                <View style={[styles.gallery]}>
+                    {posts.map((_, index) => (
+                        galleryItem({ item: posts[index] })
                     ))}
                 </View>
 
             </ScrollView>
         </SafeAreaView>
+        </ScreenTemplate>
     )
 };
 
@@ -154,9 +138,9 @@ export default ProfilePage;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#ccd5d5',
         alignItems: 'center',
         justifyContent: 'flex-start',
+        marginTop: 50,
     },
     scroll: {
         width: '100%',
@@ -172,7 +156,6 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 20,
         width: '90%',
-        height: 'auto',
     },
     profilePicture: {
         width: 100,
@@ -184,6 +167,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         marginLeft: 20,
+        width: '60%',
     },
     text: {
         color: '#1d4342',
@@ -214,5 +198,11 @@ const styles = StyleSheet.create({
     },
     gallery: {
         flexWrap: 'wrap',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        borderRadius: 10,
+        margin: 10,
+        width: '90%',
     }
 });

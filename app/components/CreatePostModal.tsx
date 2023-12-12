@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     title: {
         color: '#1d4342',
         position: 'absolute',
-        fontSize: 30,
+        fontSize: 23,
         top: 20,
         left: 20,
     },
