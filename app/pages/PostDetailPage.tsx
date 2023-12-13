@@ -1,11 +1,13 @@
 import { IconButton, ScreenTemplate, ProfilePicture } from "../components";
-import { Text, StyleSheet, Image, View, ScrollView } from "react-native";
+import { Text, StyleSheet, Image, View, ScrollView, Pressable, TextInput } from "react-native";
 import { useUserContext } from "../contexts";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Post, User } from "../models";
 import Assets from "../Assets";
 import MapView, { Marker } from 'react-native-maps';
 import { LinearGradient } from "expo-linear-gradient";
+import { FieldValue, Timestamp, serverTimestamp } from "firebase/firestore/lite";
+import { Button, Comment, Form, Header } from "semantic-ui-react";
 
 type PostDetailPageProps = {
     postUserId: string;
@@ -13,7 +15,7 @@ type PostDetailPageProps = {
 }
 
 const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => {
-    const { getUserPost, getUserById } = useUserContext();
+    const { getUserPost, getUserById, currentUser } = useUserContext();
     const [post, setPost] = useState<Post | undefined>(undefined);
     const [user, setUser] = useState<User | undefined>(undefined);
     const [mapRegion, setMapRegion] = useState({
@@ -47,6 +49,92 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
         });
     }, []);
 
+    interface CommentData {
+        author: User;
+        text: string;
+        date: number;
+    };
+
+    interface DataCommentProps {
+        comments: CommentData[];
+    };
+
+    const DataComment: React.FC<DataCommentProps> = ({comments}) => {
+        const [userComment, setUserComment] = useState<string>("");
+
+        const handleAddComment = () => {
+            if (!userComment || userComment === "") return;
+
+            const newComment: CommentData = {
+                author: currentUser!,
+                text: userComment,
+                date: Date.now(),
+            };
+
+            setUserComment("");
+        };
+
+        const formatDate = (date: number) => {
+            const dateObj = new Date(date);
+            const dateStr = dateObj.toLocaleDateString();
+
+            return `${dateStr}`;
+        };
+
+        return (
+            <View style={{borderTopWidth: 0.8, borderTopColor: "#688281"}}>
+                {comments.map((comment, index) => (
+                    <View key={index} style={{flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginTop: 10}}>
+                        <ProfilePicture 
+                        size={30} 
+                        user={comment.author} 
+                        style={{marginRight: 10}} />
+
+                        <View>
+                            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                                <Text style={{fontWeight: "bold", width: "65%"}}>{comment.author.displayName}</Text>
+                                <Text style={{marginRight: 5, color: "#688281"}}>{formatDate(comment.date)}</Text>
+                            </View>
+
+                            <Text>{comment.text}</Text>
+                        </View>
+
+                    </View>
+                ))}
+                <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
+                    <TextInput 
+                    placeholder="Add a comment..."
+                    placeholderTextColor={"#688281"}
+                    value={userComment}
+                    onChangeText={(userComment) => setUserComment(userComment)}
+                    style={{marginTop: 5, marginLeft: 5, height: 30}} />
+
+                    <IconButton 
+                    Icon={() => <Assets.icons.Send 
+                    width={22} 
+                    height={22} 
+                    fill="#365857"/>} 
+                    onPress={handleAddComment}
+                    />
+                </View>
+
+            </View>
+        );
+    };
+
+    const testComments: CommentData[] = [
+        {
+            author: currentUser!,
+            text: "This is a comment",
+            date: Date.now(),
+        },
+        {
+            author: user!,
+            text: "This is another comment",
+            date: Date.now(),
+        }
+    ];
+
     return (
         <ScreenTemplate headerPadding={50}>
             <ScrollView
@@ -69,25 +157,23 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
                 <Image source={{uri: post?.imageUrl}} style={styles.image} />
 
                 <View style={styles.infoContainer}>
-                    <View style={{flexDirection: "row"}}>
+                    <View style={styles.info}>
+                        <Text>{post?.description}</Text>
                         <IconButton 
-                            Icon={() => <Assets.icons.Heart width={30} height={30} fill="#021c1b"/>} 
-                            onPress={() => {}} />
-                        <IconButton
-                            Icon={() => <Assets.icons.Comment width={30} height={30} fill="#021c1b"/>} 
+                            Icon={() => <Assets.icons.Heart width={25} height={25} fill="#042f2e"/>} 
                             onPress={() => {}} />
                     </View>
 
-                    <Text style={styles.description}>{post?.description}</Text>
+                    <View style={styles.comments}>
+                        <DataComment comments={testComments} />
+                    </View>
                 </View>
 
             </View>
 
             <View style={styles.mapContainer}>
                     <MapView region={mapRegion} style={styles.map}>
-                        <Marker coordinate={mapRegion}>
-
-                        </Marker>
+                        <Marker coordinate={mapRegion}/>
                     </MapView>
                 </View>
 
@@ -142,21 +228,26 @@ const styles = StyleSheet.create({
         resizeMode: "contain",
     },
     infoContainer: {
-        flexDirection: "row", 
+        justifyContent: "flex-start",
         alignItems: "center",
-        justifyContent: "space-between", 
         backgroundColor: "rgba(154, 171, 171, 0.8)",
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
         width: "100%",
         padding: 10,
     },
-    description: {
-        width: "75%",
+    info: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between", 
+        width: "100%",
+    },
+    comments: {
+        marginTop: 10,
     },
     mapContainer: {
         width: '100%',
-        height: 200,
+        height: 150,
         marginBottom: 10,
     },
     map: {
