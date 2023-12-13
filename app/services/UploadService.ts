@@ -1,4 +1,4 @@
-import { Post, User } from "../models";
+import { CommentData, Post, User } from "../models";
 import { auth, db } from "./firebaseconfig";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import DownloadService from "./DownloadService";
@@ -18,7 +18,8 @@ import {
     DocumentData, 
     serverTimestamp, 
     DocumentReference,
-    updateDoc
+    updateDoc,
+    addDoc
 } from "firebase/firestore/lite";
 
 const UploadService = (
@@ -230,6 +231,18 @@ const UploadService = (
           
           console.log('Upload is complete!');
       };
+
+      const uploadComment = (userId: string, postId: string, comment: CommentData) => {
+        const commentsCollection = collection(db, `users/${userId}/posts/${postId}/comments`);
+
+        addDoc(commentsCollection, comment)
+        .then((docRef) => {
+          console.log('Comment written with ID: ', docRef.id);
+        })
+        .catch((error) => {
+          console.error('Error adding comment: ', error);
+        });
+      };
           
       const listFiles = async () => {
           const user = auth.currentUser;
@@ -246,6 +259,7 @@ const UploadService = (
           uploadDisplayName,
           uploadBio,
           uploadPost,
+          uploadComment,
           listFiles
       };
     }

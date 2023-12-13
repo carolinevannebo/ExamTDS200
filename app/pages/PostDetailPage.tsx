@@ -2,12 +2,12 @@ import { IconButton, ScreenTemplate, ProfilePicture } from "../components";
 import { Text, StyleSheet, Image, View, ScrollView, Pressable, TextInput } from "react-native";
 import { useUserContext } from "../contexts";
 import React, { useEffect, useState } from "react";
-import { Post, User } from "../models";
+import { CommentData, Post, User } from "../models";
 import Assets from "../Assets";
 import MapView, { Marker } from 'react-native-maps';
 import { LinearGradient } from "expo-linear-gradient";
 import { FieldValue, Timestamp, serverTimestamp } from "firebase/firestore/lite";
-import { Button, Comment, Form, Header } from "semantic-ui-react";
+import UploadService from "../services/UploadService";
 
 type PostDetailPageProps = {
     postUserId: string;
@@ -18,6 +18,7 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
     const { getUserPost, getUserById, currentUser } = useUserContext();
     const [post, setPost] = useState<Post | undefined>(undefined);
     const [user, setUser] = useState<User | undefined>(undefined);
+    const [comments, setComments] = useState<CommentData[]>([]);
     const [mapRegion, setMapRegion] = useState({
         latitude: 59.91121,
         longitude: 10.744865,
@@ -44,17 +45,39 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
         getUserById(postUserId)
         .then((user) => {
             setUser(user);
+            setComments(
+                [
+                    {
+                        author: currentUser!,
+                        text: "This is a comment",
+                        date: Timestamp.fromDate(new Date(Date.now())),
+                    },
+                    {
+                        author: user!,
+                        text: "This is another comment",
+                        date: Timestamp.fromDate(new Date(Date.now())),
+                    }
+                ]
+            );
         }).catch((error) => {
             console.error(error);
         });
     }, []);
 
-    interface CommentData {
-        author: User;
-        text: string;
-        date: number;
-    };
+    const testComments: CommentData[] = [
+        {
+            author: currentUser!,
+            text: "This is a comment",
+            date: Timestamp.fromDate(new Date(Date.now())),
+        },
+        {
+            author: user!,
+            text: "This is another comment",
+            date: Timestamp.fromDate(new Date(Date.now())),
+        }
+    ];
 
+    // TODO: refactor this into its own file
     interface DataCommentProps {
         comments: CommentData[];
     };
@@ -68,15 +91,20 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
             const newComment: CommentData = {
                 author: currentUser!,
                 text: userComment,
-                date: Date.now(),
+                date: Timestamp.fromDate(new Date(Date.now())),
             };
+
+            comments.push(newComment);
+            console.log(newComment);
+            // TODO: send to firebase
+            UploadService.uploadComment(postUserId, postId, newComment);
 
             setUserComment("");
         };
 
-        const formatDate = (date: number) => {
-            const dateObj = new Date(date);
-            const dateStr = dateObj.toLocaleDateString();
+        const formatDate = (timestamp: Timestamp) => {
+            const dateObj = Timestamp.fromDate(timestamp.toDate());
+            const dateStr = dateObj.toString().split(" ")[1] + " " + dateObj.toString().split(" ")[2] + ", " + dateObj.toString().split(" ")[3];
 
             return `${dateStr}`;
         };
@@ -84,7 +112,7 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
         return (
             <View style={{borderTopWidth: 0.8, borderTopColor: "#688281"}}>
                 {comments.map((comment, index) => (
-                    <View key={index} style={{flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginTop: 10}}>
+                    <View key={index} style={{flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginVertical: 5}}>
                         <ProfilePicture 
                         size={30} 
                         user={comment.author} 
@@ -122,19 +150,6 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
         );
     };
 
-    const testComments: CommentData[] = [
-        {
-            author: currentUser!,
-            text: "This is a comment",
-            date: Date.now(),
-        },
-        {
-            author: user!,
-            text: "This is another comment",
-            date: Date.now(),
-        }
-    ];
-
     return (
         <ScreenTemplate headerPadding={50}>
             <ScrollView
@@ -165,7 +180,7 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
                     </View>
 
                     <View style={styles.comments}>
-                        <DataComment comments={testComments} />
+                        <DataComment comments={comments} />
                     </View>
                 </View>
 
@@ -244,6 +259,7 @@ const styles = StyleSheet.create({
     },
     comments: {
         marginTop: 10,
+        width: "100%",
     },
     mapContainer: {
         width: '100%',

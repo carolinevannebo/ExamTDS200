@@ -15,12 +15,17 @@ const Tab = createBottomTabNavigator();
 
 const HomeNavigation: React.FC = () => {
     const { openModal } = useModalStateContext();
-    //const { currentUser, getCurrentUser } = useUserContext();
+    const { currentUser, otherUsers } = useUserContext();
 
     /*useEffect(() => {
         if (currentUser === undefined) {
             getCurrentUser();
         }
+
+        if (!otherUsers) {
+            getOtherUsers();
+        }
+
     }, []);*/
 
     return (

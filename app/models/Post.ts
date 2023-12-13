@@ -1,4 +1,5 @@
-import { FieldValue, GeoPoint } from "firebase/firestore/lite";
+import { FieldValue, GeoPoint, Timestamp } from "firebase/firestore/lite";
+import { User } from "./User";
 
 export interface Post {
     imageName: string;
@@ -6,4 +7,13 @@ export interface Post {
     createdAt: FieldValue;
     location: GeoPoint | undefined;
     description: string;
+    comments?: CommentData[];
 }
+
+export interface CommentData {
+    author: User;
+    text: string;
+    date: Timestamp;
+};
+
+// da skal createdAt være Timestamp... refaktorer

@@ -22,11 +22,12 @@ const HomePage: React.FC = () => {
             console.error(error);
         })
         setRefreshing(false);
-    }, [otherUsers]);
+    }, []);
 
-    /*useEffect(() => {
+    useEffect(() => {
         setUsers(otherUsers);
-    }, [users]);*/
+    }, [users]);
+
 
     return (
         <ScreenTemplate headerPadding={50}>
@@ -34,7 +35,7 @@ const HomePage: React.FC = () => {
             contentContainerStyle={styles.container}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
             <CreatePostModal />
-                {otherUsers.map((user, index) => (
+                {otherUsers && otherUsers.map((user, index) => (
                     user.posts.map((post, index) => (
                         <PostItem 
                         key={`${user.uid}-${index}`} 

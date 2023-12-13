@@ -33,7 +33,7 @@ const UserProvider = ({ children }: Props) => {
         getCurrentUser();
         getOtherUsers();
     }, []);
-    
+
     const getCurrentUser = async () => {
         try {
             console.log("getCurrentUser called, using firebase")
@@ -73,13 +73,10 @@ const UserProvider = ({ children }: Props) => {
     };
 
     const getUserPost = async (userId: string, postId: string) => {
-    //const getUserPost = async () => {
         try {
             const user = await DownloadService.getUserById(userId);
             console.log("User in getUserPost", user);
-            //console.log("Post 1 in getUserPost", user.posts[0])
             const post = user.posts.find((post) => post.imageName === postId);
-            //const posts = user.posts.filter((post) => post.imageUrl === postId);
             console.log("Post in getUserPost", post);
             return post;
         } catch (error) {
