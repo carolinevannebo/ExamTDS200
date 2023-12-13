@@ -55,6 +55,21 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser,}) => {
         )
     };
 
+    type MyMarkerProps = {
+        item: Post;
+    };
+
+    const MyMarker: React.FC<MyMarkerProps> = ({ item }) => {
+        return (
+            <Marker coordinate={{
+                latitude: item.location?.latitude!,
+                longitude: item.location?.longitude!,
+            }}>
+                <Image source={{uri: item.imageUrl}} style={{ width: 40, height: 40, borderRadius: 5 }} />
+            </Marker>
+        )
+    }
+
     return (
         <ScreenTemplate headerPadding={0}>
         <SafeAreaView style={styles.container}>
@@ -94,9 +109,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser,}) => {
 
                 <View style={styles.mapContainer}>
                     <MapView region={mapRegion} style={styles.map}>
-                        <Marker coordinate={mapRegion}>
-                            <Image source={Assets.images.placeholder.post} style={{ width: 50, height: 50, borderRadius: 5 }} />
-                        </Marker>
+                        {user?.posts.map((_, index) => (
+                            <MyMarker key={user?.posts[index].imageName} item={user?.posts[index]} />
+                        ))}
                     </MapView>
                 </View>
 

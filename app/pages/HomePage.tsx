@@ -34,7 +34,7 @@ const HomePage: React.FC = () => {
             contentContainerStyle={styles.container}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
             <CreatePostModal />
-                {otherUsers.map((user, index) => (
+                {otherUsers && otherUsers.map((user, index) => (
                     user.posts.map((post, index) => (
                         <PostItem 
                         key={`${user.uid}-${index}`} 

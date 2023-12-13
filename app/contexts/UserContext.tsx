@@ -14,6 +14,7 @@ export interface IUserContext {
     getOtherUsers: () => Promise<void>;
     setUserIdForPost: (userId: string) => void;
     setIdForPost: (userId: string) => void;
+    getUserById: (userId: string) => Promise<User | undefined>;
     getUserPost: (userId: string, postId: string) => Promise<Post | undefined>;
 }
 
@@ -28,6 +29,11 @@ const UserProvider = ({ children }: Props) => {
     const [postUserId, setPostUserId] = useState<string>("");
     const [postId, setPostId] = useState<string>("");
 
+    useEffect(() => {
+        getCurrentUser();
+        getOtherUsers();
+    }, []);
+    
     const getCurrentUser = async () => {
         try {
             console.log("getCurrentUser called, using firebase")
@@ -54,6 +60,16 @@ const UserProvider = ({ children }: Props) => {
 
     const setIdForPost = (userId: string) => {
         setPostId(userId);
+    };
+
+    const getUserById = async (userId: string) => {
+        try {
+            const user = await DownloadService.getUserById(userId);
+            return user;
+        } catch (error) {
+            console.error('Error getting user:', error);
+            return;
+        }
     };
 
     const getUserPost = async (userId: string, postId: string) => {
@@ -83,6 +99,7 @@ const UserProvider = ({ children }: Props) => {
             getOtherUsers,
             setUserIdForPost,
             setIdForPost,
+            getUserById,
             getUserPost,
         }}>
             {children}
