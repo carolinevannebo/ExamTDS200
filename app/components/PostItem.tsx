@@ -1,25 +1,29 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import IconButton from './IconButton';
+import ProfilePicture from "./ProfilePicture";
 import { Post, User } from "../models";
 import Assets from "../Assets";
 
 interface PostItemProps {
     user: User;
     item: Post;
+    onPress?: (user: User, item: Post) => void;
 }
 
-const PostItem: React.FC<PostItemProps> = ({item, user}: PostItemProps) => {
+const PostItem: React.FC<PostItemProps> = ({item, user, onPress}: PostItemProps) => {
     return (
         <View key={item.imageName} style={{marginVertical: 7}}>
-            <Image source={Assets.images.placeholder.profile} style={styles.profilePicture} />
-            <Image source={{uri: item.imageUrl}} style={{width: 360, height: 360}} />
+            <Pressable onPress={() => onPress?.(user, item)}>
+                <ProfilePicture size={50} user={user} style={styles.profilePicture} />
+                <Image source={{uri: item.imageUrl}} style={{width: 360, height: 360}} />
+            </Pressable>
 
             <LinearGradient 
             colors={["rgba(154, 171, 171, 0.8)", "rgba(154, 171, 171, 0.3)"]}
             start={{x: 0, y: 0}} end={{x: 1, y: 0}}
             style={styles.toolbar}>
-                <Text>{user.displayName}</Text>
+                <Text>{item.description}</Text>
                 <IconButton 
                     Icon={() => <Assets.icons.Heart width={30} height={30} fill="#021c1b"/>} 
                     onPress={() => {}} />
@@ -36,9 +40,6 @@ export default PostItem;
 
 const styles = StyleSheet.create({
     profilePicture: {
-        width: 50, 
-        height: 50, 
-        borderRadius: 25,
         position: "absolute",
         top: 10,
         left: 10,
@@ -47,13 +48,12 @@ const styles = StyleSheet.create({
     toolbar: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between", 
-        //backgroundImage: "linear-gradient(to right, rgba(154, 171, 171, 0.8), rgba(154, 171, 171, 0.5))", 
+        justifyContent: "space-between",
         position: "absolute", 
-        left: 0, 
-        bottom: 0, 
         width: 360, 
         height: 40, 
-        padding: 10
+        padding: 10,
+        bottom: 0, 
+        left: 0, 
     },
 });

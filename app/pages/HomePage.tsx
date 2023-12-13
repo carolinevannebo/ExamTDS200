@@ -5,54 +5,56 @@ import { StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserContext } from '../contexts';
 import { CreatePostModal, PostItem, ScreenTemplate } from '../components';
+import { User } from '../models';
+import { navigateWithDetails, navigate } from '../routes';
 
 const HomePage: React.FC = () => {
     const { otherUsers, getOtherUsers } = useUserContext();
     const [refreshing, setRefreshing] = useState(false);
+    const [users, setUsers] = useState<User[] | undefined>(undefined);
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
-        getOtherUsers().finally(() => setRefreshing(false));
-    }, []);
+        getOtherUsers()
+        .then(() => {
+            setUsers(otherUsers);
+        })
+        .catch((error) => {
+            console.error(error);
+        })
+        setRefreshing(false);
+    }, [users]);
  
     useEffect(() => {
-        if (otherUsers.length === 0) {
-            getOtherUsers();
-        }
-    }, [onRefresh]);
+        setUsers(otherUsers);
+    }, []);
 
     return (
-        <ScreenTemplate headerPadding={0}>
-        <SafeAreaView style={styles.container}>
-            <CreatePostModal />
-            
+        <ScreenTemplate headerPadding={50}>
             <ScrollView
+            contentContainerStyle={styles.container}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
-                {otherUsers.map((user, index) => (
+            <CreatePostModal />
+                {users && users.map((user, index) => (
                     user.posts.map((post, index) => (
-                        <PostItem key={`${user.uid}-${index}`} item={post} user={user} />
+                        <PostItem 
+                        key={`${user.uid}-${index}`} 
+                        item={post} 
+                        user={user} 
+                        onPress={() => {navigate("PostDetailPage", {user, post})}/*navigateWithDetails('pages/PostDetailPage', {user, post})*/} />
                     ))
                 ))}
             </ScrollView>
-
-        </SafeAreaView>
         </ScreenTemplate>
     )
 };
 
 export default HomePage;
-/**<ScrollView
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
-                {otherPosts.map((_, index) => (
-                    <PostItem key={index} item={otherPosts[index]} />
-                ))}
-            </ScrollView> */
+
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        //backgroundColor: '#ccd5d5',
         alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 50,
-    }
+        justifyContent: 'flex-start',
+        marginTop: 50
+    },
 });

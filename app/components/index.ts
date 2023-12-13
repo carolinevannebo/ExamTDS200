@@ -7,6 +7,7 @@ import { Register } from "./Register";
 import PostItem from "./PostItem";
 import BackgroundImage from "./BackgroundImage";
 import ScreenTemplate from "./ScreenTemplate";
+import ProfilePicture from "./ProfilePicture";
 
 export { 
     CreatePostModal, 
@@ -17,5 +18,6 @@ export {
     Register, 
     PostItem,
     BackgroundImage,
-    ScreenTemplate
+    ScreenTemplate,
+    ProfilePicture
 };

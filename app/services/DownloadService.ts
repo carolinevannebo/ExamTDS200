@@ -21,6 +21,16 @@ const DownloadService = (() => {
                   if (querySnapshot.exists()) {
 
                     const userData = querySnapshot.data();
+
+                    // Get posts from current user
+                    const posts: Post[] = [];
+                    getUserPosts(querySnapshot.id)
+                      .then((postElements) => {
+                        postElements.forEach((postElement) => {
+                          posts.push(postElement);
+                        });
+                      });
+
                     const user: User = {
                       uid: auth.currentUser?.uid,
                       bio: userData.bio,
@@ -30,7 +40,7 @@ const DownloadService = (() => {
                       profilePicture: userData.image,
                       displayName: userData.name,
                       userName: userData.userName,
-                      posts: userData.posts,
+                      posts: posts,
                     };
                     resolve(user);
 
@@ -71,7 +81,7 @@ const DownloadService = (() => {
                     // Get posts from other users
                     // Note, this might be redundant, but it works so LEAVE IT ALONE
                     const posts: Post[] = [];
-                    const promise = getOtherUserPosts(doc.id).then((postElements) => {
+                    const promise = getUserPosts(doc.id).then((postElements) => {
                       return postElements;
                     });
 
@@ -115,59 +125,7 @@ const DownloadService = (() => {
         });
       };
 
-      const getUserPosts = async () => {
-        try {
-            // Get posts from other users
-            const userPosts: Post[] = [];
-      
-            const userPostsCollectionRef = collection(db, `users/${auth.currentUser?.uid}/posts`);
-            const userPostsSnapshot = await getDocs(userPostsCollectionRef);
-      
-            userPostsSnapshot.forEach((postDoc) => {
-              const post = postDoc.data() as Post;
-              userPosts.push(post);
-            });
-      
-            //filter out empty posts, just in case
-            const filteredPosts = userPosts.filter((post) => post.imageUrl !== '');
-            return filteredPosts;
-        } catch (error) {
-          console.error('Error getting user posts:', error);
-          throw error;
-        }
-      };
-
-    /*const getUserPosts = () => {
-        return new Promise<Post[]>((resolve, reject) => {
-          const unsubscribe = auth.onAuthStateChanged((user) => {
-            if (user) {
-              const userDocRef = doc(db, 'users', user.uid);
-              const postsCollectionRef = collection(userDocRef, 'posts');
-      
-              getDocs(postsCollectionRef)
-                .then((querySnapshot) => {
-                  const posts: Post[] = [];
-                  querySnapshot.forEach((doc) => {
-                    posts.push(doc.data() as Post);
-                  });
-      
-                  //filter out empty posts, just in case
-                  const filteredPosts = posts.filter((post) => post.imageUrl !== '');
-      
-                  resolve(filteredPosts);
-                })
-                .catch((error) => {
-                  reject(new Error('Error getting user posts: ' + error));
-                });
-            } else {
-              reject(new Error('No user signed in'));
-              unsubscribe(); // Stop listening if there's no user
-            }
-          });
-        });
-      };*/
-
-      const getOtherUserPosts = async (userId: string) => {
+      const getUserPosts = async (userId: string) => {
         try {
           const userPosts: Post[] = [];
           const userPostsCollectionRef = collection(db, `users/${userId}/posts`);
@@ -194,42 +152,9 @@ const DownloadService = (() => {
         }
       };
 
-      const getFeedPosts = async () => {
-        try {
-          // Get posts from other users
-          const postsSnapshot = await getDocs(collection(db, 'users'));
-          const otherUsersPosts: Post[] = [];
-      
-          for (const userDoc of postsSnapshot.docs) {
-            const userId = userDoc.id;
-            // Skip the current user's posts
-            if (userId === auth.currentUser?.uid) {
-              continue;
-            }
-      
-            const userPostsCollectionRef = collection(db, `users/${userId}/posts`);
-            const userPostsSnapshot = await getDocs(userPostsCollectionRef);
-      
-            userPostsSnapshot.forEach((postDoc) => {
-              const post = postDoc.data() as Post;
-              otherUsersPosts.push(post);
-            });
-          }
-      
-          //filter out empty posts, just in case
-          const filteredPosts = otherUsersPosts.filter((post) => post.imageUrl !== '');
-          return filteredPosts;
-        } catch (error) {
-          console.error('Error getting feed posts:', error);
-          throw error;
-        }
-      };
-
       return {
         getCurrentUser,
         getOtherUsers,
-        getUserPosts,
-        getFeedPosts,
       };
 })();
 

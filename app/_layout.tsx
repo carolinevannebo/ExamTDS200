@@ -2,10 +2,11 @@
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { UserProvider, ModalStateProvider } from "./contexts";
+//import { UserProvider, ModalStateProvider } from "./contexts";
 import { navigationRef, HomeNavigation } from "./routes";
 import { Register, LogIn } from "./components";
 import { WelcomePage } from "./pages";
+import { ModalStateProvider, UserProvider } from "./contexts";
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -23,7 +24,7 @@ const Layout = () => {
                         {() => (
                             <UserProvider>
                                 <ModalStateProvider>
-                                    <HomeNavigation />
+                                    <HomeNavigation/>
                                 </ModalStateProvider>
                             </UserProvider>
                         )}
@@ -36,10 +37,15 @@ const Layout = () => {
 const screenOptions = {
     headerShown: false,
 }
-/*const screenOptions = {
-    headerStyle: { backgroundColor: '#042f2e' },
-    headerTintColor: '#ecfeff',
-    headerTitle: '',
-}*/
 
 export default Layout;
+
+/**<Screen name="routes/HomeNavigation">
+                        {() => (
+                            <UserProvider>
+                                <ModalStateProvider>
+                                    <HomeNavigation/>
+                                </ModalStateProvider>
+                            </UserProvider>
+                        )}
+                    </Screen> */

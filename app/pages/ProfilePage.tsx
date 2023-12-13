@@ -4,19 +4,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Text, StyleSheet, View, Image, ScrollView, FlatList, RefreshControl, ImageErrorEventData, ImageLoadEventData, ImageComponent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScreenTemplate, SettingsModal } from '../components';
+import { ScreenTemplate, SettingsModal, ProfilePicture } from '../components';
 import { Post, User } from '../models';
 import MapView, { Marker } from 'react-native-maps';
 import Assets from '../Assets';
 
 interface ProfilePageProps {
     user: User | null;
-    posts: Post[];
-    getUser: () => Promise<void>
-    getPosts: () => Promise<void>
+    getUser: () => Promise<void>;
 }
 
-const ProfilePage: React.FC<ProfilePageProps> = ({user, posts, getUser, getPosts}) => {
+const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser,}) => {
     const [refreshing, setRefreshing] = useState(false);
     const [mapRegion, setMapRegion] = useState({
         latitude: 59.91121,
@@ -28,31 +26,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, posts, getUser, getPosts
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         getUser().finally(() => setRefreshing(false));
-        getPosts().finally(() => setRefreshing(false));
     }, []);
 
     useEffect(() => {
-        if (user === null) {
+        /*if (user === null) {
             getUser();
-        }
-
-        if (posts.length === 0) {
-            getPosts();
-        }
-    }, [onRefresh]);
-
-    const renderImage = () => {
-        console.log(user?.profilePicture);
-        if (user?.profilePicture !== "default") { // use old upload if any
-            return (
-                <Image style={styles.profilePicture} source={{uri: user?.profilePicture}} />
-            )
-        } else { // use placeholder
-            return (
-                <Image style={styles.profilePicture} source={Assets.images.placeholder.profile} />
-            )
-        }
-    }
+        }*/
+    }, [user]);
 
     const galleryItem = ({ item }: { item: Post }) => {
         Image.prefetch(item.imageUrl)
@@ -86,7 +66,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, posts, getUser, getPosts
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
 
                 <View style={styles.section}>
-                    {renderImage()}
+                    <ProfilePicture size={100} user={user!}/>
 
                     <View style={styles.headerTextBox}>
                         <Text style={[styles.headerTitle, styles.text]}>{user?.displayName ?? "Username"}</Text>
@@ -121,8 +101,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, posts, getUser, getPosts
                 </View>
 
                 <View style={[styles.gallery]}>
-                    {posts.map((_, index) => (
-                        galleryItem({ item: posts[index] })
+                    {user?.posts.map((_, index) => (
+                        galleryItem({ item: user?.posts[index] })
                     ))}
                 </View>
 
@@ -133,6 +113,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, posts, getUser, getPosts
 };
 
 export default ProfilePage;
+
+/**<View style={[styles.gallery]}>
+                    {posts.map((_, index) => (
+                        galleryItem({ item: posts[index] })
+                    ))}
+                </View> */
 
 
 const styles = StyleSheet.create({
@@ -156,11 +142,6 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 20,
         width: '90%',
-    },
-    profilePicture: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
     },
     headerTextBox: {
         flexDirection: 'column',

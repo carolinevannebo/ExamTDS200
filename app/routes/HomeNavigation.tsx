@@ -1,93 +1,65 @@
 // Navigation tabs for logged in users
 
 import { View, Text } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useModalStateContext, useUserContext } from "../contexts";
+import { ModalStateProvider, UserProvider, useModalStateContext, useUserContext } from "../contexts";
 import { HomePage, ProfilePage } from "../pages";
-import { IconButton, ScreenTemplate } from '../components';
+import { IconButton } from '../components';
 import Assets from "../Assets";
 import { LinearGradient } from "expo-linear-gradient";
+import FeedNavigation from "./FeedNavigation";
+import ProfileNavigation from "./ProfileNavigation";
 
 const Tab = createBottomTabNavigator();
 
 const HomeNavigation: React.FC = () => {
     const { openModal } = useModalStateContext();
-    const { currentUser, currentUserPosts, getCurrentUser, getCurrentUserPosts } = useUserContext();
+    //const { currentUser, getCurrentUser } = useUserContext();
 
-    useEffect(() => {
-        if (currentUser === null) {
+    /*useEffect(() => {
+        if (currentUser === undefined) {
             getCurrentUser();
         }
-        /*DownloadService.getCurrentUser()
-          .then((user) => {
-            setUserName(user.userName);
-            setUser(user);
-          })
-          .catch((error) => {
-            console.error(error.message);
-          });*/
-    }, []);
+    }, []);*/
 
     return (
-        <Tab.Navigator initialRouteName="Feed" screenOptions={screenOptions}>
-            <Tab.Screen 
-            name="Feed"
-            component={HomePage}
+        <Tab.Navigator initialRouteName="FeedNavigation" screenOptions={screenOptions}>
+            <Tab.Screen
+            name="FeedNavigation"
+            component={FeedNavigation}
             options={{
                 headerTitle: "",
-                headerLeft: () => (
-                    <Text style={{
-                        color: '#1d4342',
-                        fontSize: 23,
-                        fontWeight: '400',
-                        marginLeft: 20
-                    }}>Explore</Text>
+                tabBarLabel: "Feed",
+                tabBarIcon: ({focused}) => (
+                    <View style={{opacity: focused ? 0.95 : 0.5}}>
+                        <Assets.icons.Home width={30} height={30} fill="#fff"/>
+                    </View>
                 ),
                 headerRight: () => (
                     <IconButton Icon={() => 
                         <Assets.icons.Add width={30} height={30} fill="#1d4342"/>
                     } onPress={openModal} style={{marginRight: 15}} />
-                ),
-                tabBarIcon: ({focused}) => (
-                    <View style={{opacity: focused ? 0.95 : 0.5}}>
-                        <Assets.icons.Home width={30} height={30} fill="#fff"/>
-                    </View>
                 )
             }}/>
 
-            <Tab.Screen 
-            name="Profile" 
+            <Tab.Screen
+            name="ProfileNavigation"
+            component={ProfileNavigation}
             options={{
                 headerTitle: "",
-                headerLeft: () => (
-                    <Text style={{
-                        color: '#1d4342',
-                        fontSize: 23,
-                        fontWeight: '400',
-                        marginLeft: 20,
-                    }}>{currentUser?.userName ?? "Username"}</Text>
+                tabBarLabel: "Profile",
+                tabBarIcon: ({focused}) => (
+                    <View style={{opacity: focused ? 0.95 : 0.5}}>
+                        <Assets.icons.Profile width={30} height={30} fill="#fff"/>
+                    </View>
                 ),
                 headerRight: () => (
                     <IconButton Icon={() => 
                         <Assets.icons.Gear width={30} height={30} fill="#1d4342"/>
                     } style={{marginRight: 10}} onPress={openModal} />
                 ),
-                tabBarIcon: ({focused}) => (
-                    <View style={{opacity: focused ? 0.95 : 0.5}}>
-                        <Assets.icons.Profile width={30} height={30} fill="#fff"/>
-                    </View>
-                )
-            }}>
-                {() => 
-                    <ProfilePage 
-                        user={currentUser} 
-                        posts={currentUserPosts} 
-                        getUser={getCurrentUser} 
-                        getPosts={getCurrentUserPosts} 
-                    />
-                }
-            </Tab.Screen>
+            }}/>
         </Tab.Navigator>
     )
 }
