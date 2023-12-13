@@ -12,8 +12,8 @@ export type RouteList = {
     ProfileNavigation: undefined;
     HomePage: undefined;
     ProfilePage: undefined,
-    PostDetailPage?: {user?: User, post?: Post},
-}; // du trenger ikke alle routes her
+    PostDetailPage?: {postUserId: string, postId: string},
+}; // du trenger ikke alle routes her?
 
 type OwnNavigationProp = NavigationProp<RouteList>;
 
@@ -24,15 +24,15 @@ export const useOwnNavigation = () => {
         navigation.navigate(path);
     };
 
-    const navigateWithDetails = (path: keyof RouteList, details?: any) => {
-        navigation.navigate(path, details);
-    };
-
     const goBack = () => {
         navigation.goBack();
     };
 
-    return { navigate, goBack, navigateWithDetails};
+    const setParams = (param: {postUserId: string, postId: string}) => {
+        return navigation.setParams(param);
+    }
+
+    return { navigate, goBack, setParams};
 };
 
 export default useOwnNavigation;

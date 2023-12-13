@@ -4,17 +4,26 @@ import IconButton from './IconButton';
 import ProfilePicture from "./ProfilePicture";
 import { Post, User } from "../models";
 import Assets from "../Assets";
+import { navigate, setParams } from "../routes";
+import { useUserContext } from "../contexts";
 
 interface PostItemProps {
     user: User;
     item: Post;
-    onPress?: (user: User, item: Post) => void;
 }
 
-const PostItem: React.FC<PostItemProps> = ({item, user, onPress}: PostItemProps) => {
+const PostItem: React.FC<PostItemProps> = ({item, user}: PostItemProps) => {
+    const { setUserIdForPost, setIdForPost } = useUserContext();
+
+    const handlePress = () => {
+        setUserIdForPost(user.uid!);
+        setIdForPost(item.imageName);
+        navigate("PostDetailPage", {postUserId: user.uid, postId: item.imageName});
+    }
+
     return (
         <View key={item.imageName} style={{marginVertical: 7}}>
-            <Pressable onPress={() => onPress?.(user, item)}>
+            <Pressable onPress={handlePress}>
                 <ProfilePicture size={50} user={user} style={styles.profilePicture} />
                 <Image source={{uri: item.imageUrl}} style={{width: 360, height: 360}} />
             </Pressable>

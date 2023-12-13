@@ -1,3 +1,6 @@
+// Service to get data from backend
+// TODO: These functions are very similar, so they should be refactored
+
 import { Post } from "../models/Post";
 import { auth, db } from "./firebaseconfig";
 import { 
@@ -84,35 +87,89 @@ const DownloadService = (() => {
                     const promise = getUserPosts(doc.id).then((postElements) => {
                       return postElements;
                     });
-
                     promise.then((postElements) => {
                       postElements.forEach((postElement) => {
                         posts.push(postElement);
                       });
                     });
-
-                    // Complete the fields
-                    const currentOtherUser: User = {
-                      uid: doc.id,
-                      bio: userData.bio,
-                      email: userData.email,
-                      followers: userData.followersCount,
-                      following: userData.followingCount,
-                      profilePicture: userData.image,
-                      displayName: userData.name,
-                      userName: userData.userName,
-                      posts: posts,
-                    };
-
-                    if (currentOtherUser.uid !== user.uid) {
-                      users.push(currentOtherUser);
-                    }
+                      // Complete the fields
+                      const currentOtherUser: User = {
+                        uid: doc.id,
+                        bio: userData.bio,
+                        email: userData.email,
+                        followers: userData.followersCount,
+                        following: userData.followingCount,
+                        profilePicture: userData.image,
+                        displayName: userData.name,
+                        userName: userData.userName,
+                        posts: posts,
+                      };
+  
+                      if (currentOtherUser.uid !== user.uid) {
+                        users.push(currentOtherUser);
+                      }
                   });
                   console.log("user count: " + users.length)
                   resolve(users);
                 })
                 .catch((error) => {
                   reject(new Error('Error getting users: ' + error));
+                })
+                .finally(() => {
+                  unsubscribe(); // Stop listening after getting the user data
+                });
+            } else {
+              reject(new Error('No user signed in'));
+              unsubscribe(); // Stop listening if there's no user
+            }
+          });
+        });
+      };
+
+      const getUserById = async (userId: string) => {
+        return new Promise<User>((resolve, reject) => {
+          const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+              const userDocRef = doc(db, 'users', userId);
+
+              getDoc(userDocRef)
+                .then((querySnapshot) => {
+                  if (querySnapshot.exists()) {
+
+                    const userData = querySnapshot.data();
+
+                    // Get posts from current user
+                    const posts: Post[] = [];
+                    getUserPosts(querySnapshot.id)
+                      .then((postElements) => {
+                        postElements.forEach((postElement) => {
+                          posts.push(postElement);
+                        });
+                      })
+                      .catch((error) => {
+                        console.error('Error getting other user posts:', error);
+                      })
+                      .finally(() => {
+                        
+                      const user: User = {
+                        uid: auth.currentUser?.uid,
+                        bio: userData.bio,
+                        email: userData.email,
+                        followers: userData.followersCount,
+                        following: userData.followingCount,
+                        profilePicture: userData.image,
+                        displayName: userData.name,
+                        userName: userData.userName,
+                        posts: posts,
+                      };
+                      resolve(user);
+                    });
+                  } else {
+                    reject(new Error('User document not found'));
+                  }
+                })
+                .catch((error) => {
+                  reject(new Error('Error getting document: ' + error));
                 })
                 .finally(() => {
                   unsubscribe(); // Stop listening after getting the user data
@@ -155,6 +212,7 @@ const DownloadService = (() => {
       return {
         getCurrentUser,
         getOtherUsers,
+        getUserById,
       };
 })();
 

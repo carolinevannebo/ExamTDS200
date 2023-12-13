@@ -6,7 +6,7 @@ import { auth } from "./services/firebaseconfig";
 
 const index = () => {
     const userSignedIn = auth.currentUser;
-    const initialRouteName = userSignedIn ? 'pages/HomePage' : 'pages/WelcomePage';
+    const initialRouteName = userSignedIn ? 'routes/HomeNavigation' : 'pages/WelcomePage';
 
     return <Redirect href={initialRouteName}/>
 }

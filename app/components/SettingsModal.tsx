@@ -2,7 +2,7 @@
 // TODO: the two modals can be HOC, refactor if you have time
 
 import { useState, useEffect } from 'react';
-import { Modal, StyleSheet, Text, Pressable, Alert, View, Image, TextInput, Keyboard } from 'react-native';
+import { Modal, StyleSheet, Text, Pressable, Alert, View, Image, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useModalStateContext, useUserContext } from "../contexts";
 import * as ImagePicker from 'expo-image-picker';
@@ -11,6 +11,7 @@ import Assets from '../Assets';
 import { auth } from '../services/firebaseconfig';
 import LoadingSpinner from './LoadingSpinner';
 import UploadService from '../services/UploadService';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const SettingsModal: React.FC = () => {
     const { isModalVisible, closeModal } = useModalStateContext();
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccd5d5',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginTop: 30
+        marginTop: 30,
     },
     title: {
         color: '#1d4342',

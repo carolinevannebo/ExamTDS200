@@ -6,28 +6,27 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserContext } from '../contexts';
 import { CreatePostModal, PostItem, ScreenTemplate } from '../components';
 import { User } from '../models';
-import { navigateWithDetails, navigate } from '../routes';
 
 const HomePage: React.FC = () => {
     const { otherUsers, getOtherUsers } = useUserContext();
     const [refreshing, setRefreshing] = useState(false);
-    const [users, setUsers] = useState<User[] | undefined>(undefined);
+    const [users, setUsers] = useState<User[]>([]);
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         getOtherUsers()
-        .then(() => {
+        /*.then(() => {
             setUsers(otherUsers);
-        })
+        })*/
         .catch((error) => {
             console.error(error);
         })
         setRefreshing(false);
-    }, [users]);
- 
-    useEffect(() => {
+    }, [otherUsers]);
+
+    /*useEffect(() => {
         setUsers(otherUsers);
-    }, []);
+    }, [users]);*/
 
     return (
         <ScreenTemplate headerPadding={50}>
@@ -35,13 +34,12 @@ const HomePage: React.FC = () => {
             contentContainerStyle={styles.container}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
             <CreatePostModal />
-                {users && users.map((user, index) => (
+                {otherUsers.map((user, index) => (
                     user.posts.map((post, index) => (
                         <PostItem 
                         key={`${user.uid}-${index}`} 
                         item={post} 
-                        user={user} 
-                        onPress={() => {navigate("PostDetailPage", {user, post})}/*navigateWithDetails('pages/PostDetailPage', {user, post})*/} />
+                        user={user} />
                     ))
                 ))}
             </ScrollView>

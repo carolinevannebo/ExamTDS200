@@ -11,7 +11,8 @@ const { Navigator, Screen } = createNativeStackNavigator();
 
 const FeedNavigation: React.FC = () => {
     //const { currentUser, getCurrentUser } = useUserContext();
-    const { openModal } = useModalStateContext();
+    const { postUserId, postId } = useUserContext();
+    //const { openModal } = useModalStateContext();
 
     /*useEffect(() => {
         if (currentUser === undefined) {
@@ -38,12 +39,16 @@ const FeedNavigation: React.FC = () => {
 
             <Screen 
             name="PostDetailPage" 
-            component={PostDetailPage}
+            //component={PostDetailPage}
+            initialParams={{item: undefined, user: undefined}}
             options={{
                 headerTitle: "",
                 headerLeft: () => (<Fragment></Fragment>),
-                
-            }}/>
+            }}>
+                { () => 
+                    <PostDetailPage postUserId={postUserId} postId={postId}/>
+                }
+            </Screen>
         </Navigator>
     )
 }

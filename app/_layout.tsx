@@ -12,25 +12,21 @@ const { Navigator, Screen } = createNativeStackNavigator();
 
 const Layout = () => {
     return (
-        <NavigationContainer 
-            independent={true}
-            ref={navigationRef}
-            >
+        <UserProvider>
+        <ModalStateProvider>
+            <NavigationContainer 
+                independent={true}
+                ref={navigationRef}
+                >
                 <Navigator initialRouteName='routes/HomeNavigation' screenOptions={screenOptions}>
                     <Screen name="pages/WelcomePage" component={WelcomePage} />
                     <Screen name="components/Register" component={Register} />
                     <Screen name="components/LogIn" component={LogIn} />
-                    <Screen name="routes/HomeNavigation">
-                        {() => (
-                            <UserProvider>
-                                <ModalStateProvider>
-                                    <HomeNavigation/>
-                                </ModalStateProvider>
-                            </UserProvider>
-                        )}
-                    </Screen>
+                    <Screen name="routes/HomeNavigation" component={HomeNavigation}/>
                 </Navigator>
             </NavigationContainer>
+        </ModalStateProvider>
+        </UserProvider>
     )
 }
 
