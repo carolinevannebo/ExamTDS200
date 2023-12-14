@@ -19,11 +19,11 @@ const HomePage: React.FC<HomePageProps> = ({users, getUsers}) => {
 
     console.log("otherUsers in homepage: ", users)
 
-    /*const onRefresh = useCallback(() => {
+    const onRefresh = useCallback(() => {
         setRefreshing(true);
-        //getUsers().finally(() => setRefreshing(false));
+        getUsers().finally(() => setRefreshing(false));
         setRefreshing(false);
-    }, []);*/
+    }, []);
 
     /*useEffect(() => {
         console.log("homepage users: ", otherUsers);
@@ -37,9 +37,11 @@ const HomePage: React.FC<HomePageProps> = ({users, getUsers}) => {
 
     return (
         <ScreenTemplate headerPadding={50}>
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <CreatePostModal />
-            <ScrollView>
+            <ScrollView
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
+            >
                 {users.map((user, index) => (
                     user.posts.map((post, index) => (
                         <PostItem 
@@ -49,7 +51,7 @@ const HomePage: React.FC<HomePageProps> = ({users, getUsers}) => {
                     ))
                 ))}
             </ScrollView>
-            </SafeAreaView>
+            </View>
         </ScreenTemplate>
     )
 };

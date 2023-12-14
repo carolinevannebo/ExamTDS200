@@ -80,7 +80,7 @@ const SettingsModal: React.FC = () => {
     const handleSave = async () => {
         setIsLoading(true);
         console.log("display name", displayName);
-        displayName !== currentUser?.displayName ? UploadService.uploadDisplayName(displayName) : () => {};
+        displayName !== "" ? UploadService.uploadDisplayName(displayName) : () => {};
         bio !== "" ? UploadService.uploadBio(bio) : () => {};
         
         if (result && !result!.canceled) {
