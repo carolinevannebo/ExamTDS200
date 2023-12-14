@@ -14,6 +14,7 @@ interface PostItemProps {
 
 const PostItem: React.FC<PostItemProps> = ({item, user}: PostItemProps) => {
     const { setUserIdForPost, setIdForPost } = useUserContext();
+    console.log("user in postitem: ", user.userName);
 
     const handlePress = () => {
         setUserIdForPost(user.uid!);
@@ -22,7 +23,7 @@ const PostItem: React.FC<PostItemProps> = ({item, user}: PostItemProps) => {
     }
 
     return (
-        <View key={item.imageName} style={{marginVertical: 7}}>
+        <View style={{marginVertical: 7}}>
             <Pressable onPress={handlePress}>
                 <ProfilePicture size={50} user={user} style={styles.profilePicture} />
                 <Image source={{uri: item.imageUrl}} style={{width: 360, height: 360}} />

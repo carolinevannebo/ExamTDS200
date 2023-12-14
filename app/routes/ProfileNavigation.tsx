@@ -40,7 +40,7 @@ const ProfileNavigation: React.FC = () => {
                 }
             </Screen>
 
-            <Screen name="PostDetailPage" component={PostDetailPage} />
+            {/*<Screen name="PostDetailPage" component={PostDetailPage} />*/}
         </Navigator>
     )
 }

@@ -15,18 +15,6 @@ const Tab = createBottomTabNavigator();
 
 const HomeNavigation: React.FC = () => {
     const { openModal } = useModalStateContext();
-    const { currentUser, otherUsers } = useUserContext();
-
-    /*useEffect(() => {
-        if (currentUser === undefined) {
-            getCurrentUser();
-        }
-
-        if (!otherUsers) {
-            getOtherUsers();
-        }
-
-    }, []);*/
 
     return (
         <Tab.Navigator initialRouteName="FeedNavigation" screenOptions={screenOptions}>

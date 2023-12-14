@@ -6,25 +6,20 @@ import { useModalStateContext, useUserContext } from "../contexts";
 import Assets from "../Assets";
 import { Fragment, useEffect } from "react";
 import { goBack } from "./NavigationRef";
+import { User } from "../models";
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
 const FeedNavigation: React.FC = () => {
-    //const { currentUser, getCurrentUser } = useUserContext();
+    const { otherUsers, getOtherUsers } = useUserContext();
     const { postUserId, postId } = useUserContext();
     //const { openModal } = useModalStateContext();
-
-    /*useEffect(() => {
-        if (currentUser === undefined) {
-            getCurrentUser();
-        }
-    }, []);*/
     
     return (
         <Navigator initialRouteName='HomePage' screenOptions={{headerTransparent: true}}>
             <Screen 
             name="HomePage"
-            component={HomePage}
+            //component={HomePage}
             options={{
                 headerTitle: "",
                 headerLeft: () => (
@@ -35,7 +30,11 @@ const FeedNavigation: React.FC = () => {
                         marginLeft: 20
                     }}>Explore</Text>
                 ),
-            }}/>
+            }}>
+                {() => 
+                    <HomePage users={otherUsers} getUsers={getOtherUsers} />
+                }
+            </Screen>
 
             <Screen 
             name="PostDetailPage" 

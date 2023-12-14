@@ -30,7 +30,7 @@ const UserProvider = ({ children }: Props) => {
     const [postId, setPostId] = useState<string>("");
 
     useEffect(() => {
-        getCurrentUser();
+        //getCurrentUser();
         getOtherUsers();
     }, []);
 

@@ -14,7 +14,7 @@ interface ProfilePageProps {
     getUser: () => Promise<void>;
 }
 
-const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser,}) => {
+const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
     const [refreshing, setRefreshing] = useState(false);
     const [mapRegion, setMapRegion] = useState({
         latitude: 59.91121,

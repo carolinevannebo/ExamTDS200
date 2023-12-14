@@ -1,41 +1,46 @@
 // User feed page, also known as the home page
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { StyleSheet, ScrollView, RefreshControl, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserContext } from '../contexts';
 import { CreatePostModal, PostItem, ScreenTemplate } from '../components';
 import { User } from '../models';
 
-const HomePage: React.FC = () => {
-    const { otherUsers, getOtherUsers } = useUserContext();
+interface HomePageProps {
+    users: User[];
+    getUsers: () => Promise<void>;
+}
+
+const HomePage: React.FC<HomePageProps> = ({users, getUsers}) => {
+    //const { otherUsers, getOtherUsers } = useUserContext();
     const [refreshing, setRefreshing] = useState(false);
-    const [users, setUsers] = useState<User[]>([]);
+    //const [users, setUsers] = useState<User[]>([]);
 
-    const onRefresh = useCallback(() => {
+    console.log("otherUsers in homepage: ", users)
+
+    /*const onRefresh = useCallback(() => {
         setRefreshing(true);
-        getOtherUsers()
-        /*.then(() => {
-            setUsers(otherUsers);
-        })*/
-        .catch((error) => {
-            console.error(error);
-        })
+        //getUsers().finally(() => setRefreshing(false));
         setRefreshing(false);
-    }, []);
+    }, []);*/
 
-    useEffect(() => {
+    /*useEffect(() => {
+        console.log("homepage users: ", otherUsers);
         setUsers(otherUsers);
-    }, [users]);
+    }, [users])*/
+
+    /*useEffect(() => {
+        getUsers();
+    }, []);*/
 
 
     return (
         <ScreenTemplate headerPadding={50}>
-            <ScrollView
-            contentContainerStyle={styles.container}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
-            <CreatePostModal />
-                {otherUsers && otherUsers.map((user, index) => (
+            <SafeAreaView style={styles.container}>
+                <CreatePostModal />
+            <ScrollView>
+                {users.map((user, index) => (
                     user.posts.map((post, index) => (
                         <PostItem 
                         key={`${user.uid}-${index}`} 
@@ -44,9 +49,12 @@ const HomePage: React.FC = () => {
                     ))
                 ))}
             </ScrollView>
+            </SafeAreaView>
         </ScreenTemplate>
     )
 };
+
+// refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
 
 export default HomePage;
 
@@ -54,6 +62,7 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginTop: 50
+        marginTop: 50,
+        height: "100%",
     },
 });

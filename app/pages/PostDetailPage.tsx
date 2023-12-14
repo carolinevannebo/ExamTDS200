@@ -45,20 +45,7 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
         getUserById(postUserId)
         .then((user) => {
             setUser(user);
-            setComments(
-                [
-                    {
-                        author: currentUser!,
-                        text: "This is a comment",
-                        date: Timestamp.fromDate(new Date(Date.now())),
-                    },
-                    {
-                        author: user!,
-                        text: "This is another comment",
-                        date: Timestamp.fromDate(new Date(Date.now())),
-                    }
-                ]
-            );
+            setComments(post?.comments || []);
         }).catch((error) => {
             console.error(error);
         });
