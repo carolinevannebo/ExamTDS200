@@ -20,12 +20,19 @@ interface ProfilePageProps {
 const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
     const { setUserIdForPost, setIdForPost } = useUserContext();
     const [refreshing, setRefreshing] = useState(false);
+    const [postCount, setPostCount] = useState<number>(0);
     const [mapRegion, setMapRegion] = useState({
         latitude: 59.91121,
         longitude: 10.744865,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     });
+
+    useEffect(() => {
+        if (user) {
+            setPostCount(user.posts.length);
+        }
+    }, []);
 
     const handlePress = (item: Post) => {
         setUserIdForPost(user?.uid!);
@@ -104,7 +111,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
                         
                         <View style={styles.headerInfo}>
                             <View style={styles.headerInfoText}>
-                                <Text style={styles.text}>0</Text>
+                                <Text style={styles.text}>{postCount}</Text>
                                 <Text style={styles.text}>Posts</Text>
                             </View>
 

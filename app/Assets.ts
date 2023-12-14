@@ -9,6 +9,7 @@ import Gear from './assets/icons/Gear.svg'
 import Image from './assets/icons/Image.svg'
 import Logout from './assets/icons/Logout.svg'
 import Profile from './assets/icons/Profile.svg'
+import Remove from './assets/icons/Remove.svg'
 import Send from './assets/icons/Send.svg'
 
 const bgImgSourceIOS = require('./assets/images/bg-ios.jpg');
@@ -30,6 +31,7 @@ export const Assets = {
         Image,
         Logout,
         Profile,
+        Remove,
         Send,
     },
     images: {

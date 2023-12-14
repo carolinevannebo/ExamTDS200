@@ -19,7 +19,10 @@ import {
     serverTimestamp, 
     DocumentReference,
     updateDoc,
-    addDoc
+    addDoc,
+    getDocs,
+    getDoc,
+    deleteDoc
 } from "firebase/firestore/lite";
 
 const UploadService = (
@@ -243,6 +246,38 @@ const UploadService = (
           console.error('Error adding comment: ', error);
         });
       };
+
+      // Note: you should've just added id to each comment, this is too much work
+      const deleteComment = async (userId: string, postId: string, comment: CommentData) => {
+        const commentsCollectionRef = collection(db, `users/${userId}/posts/${postId}/comments`);
+        const commentsSnapshot = await getDocs(commentsCollectionRef);
+        if (commentsSnapshot.empty) {
+          console.log("No posts for user: " + userId)
+          return;
+        }
+
+        const documents = commentsSnapshot.docs.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        });
+
+        for (const document of documents) {
+          const commentDocRef = doc(db, `users/${userId}/posts/${postId}/comments/${document.id}`);
+          const commentDoc = await getDoc(commentDocRef);
+          const commentData = commentDoc.data() as CommentData;
+          const commentRef: CommentData = {
+            author: commentData.author,
+            text: commentData.text,
+            date: commentData.date,
+          };
+          
+          if (commentRef.author.uid === comment.author.uid && commentRef.text === comment.text) {
+            console.log('Comment found, deleting...', commentRef);
+            await deleteDoc(commentDocRef);
+            console.log('Comment deleted');
+            break;
+          }
+        }
+      };
           
       const listFiles = async () => {
           const user = auth.currentUser;
@@ -260,6 +295,7 @@ const UploadService = (
           uploadBio,
           uploadPost,
           uploadComment,
+          deleteComment,
           listFiles
       };
     }

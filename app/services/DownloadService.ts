@@ -366,7 +366,6 @@ const DownloadService = (() => {
               date: commentData.date,
             };
             postComments.push(comment);
-            console.log("COMMENT: " + comment.text);
           });
 
           // funksjonen funker

@@ -42,16 +42,37 @@ const CommentSection: React.FC<CommentSectionProps> = ({comments, currentUser, p
         setUserComment("");
     };
 
-    const formatDate = (timestamp: Timestamp) => {
-        const dateObj = Timestamp.fromDate(timestamp.toDate());
-        const dateStr = dateObj.toString().split(" ")[1] + " " + dateObj.toString().split(" ")[2] + ", " + dateObj.toString().split(" ")[3];
+    const handleDeleteComment = (comment: CommentData) => {
+        comments.find((c, index) => {
+            if (c === comment) {
+                comments.splice(index, 1);
+                UploadService.deleteComment(postUserId, postId, comment);
+            }
+        });
+    };
 
+    const formatDate = (timestamp: Timestamp) => {
+        const dateObj = timestamp.toDate();
+        const dateStr = dateObj.toDateString();
         return `${dateStr}`;
     };
 
     const handleNavigate = (user: User) => {
         setOtherUser(user); // nå krongler du litt
         navigate("ProfilePage");
+    }
+
+    type DeleteCommentProps = { comment: CommentData }
+    const DeleteComment: React.FC<DeleteCommentProps> = ({comment}) => {
+        if (comment.author.uid === currentUser.uid) {
+            return <IconButton Icon={() =>
+                <Assets.icons.Remove
+                width={22} 
+                height={22} 
+                fill="#365857"/>}
+                onPress={() => handleDeleteComment(comment)}
+                style={{marginRight: 5}}/>
+        }
     }
 
     return (
@@ -65,13 +86,16 @@ const CommentSection: React.FC<CommentSectionProps> = ({comments, currentUser, p
                         style={{marginRight: 10}} />
                     </Pressable>
 
-                    <View>
+                    <View style={{width: "90%"}}>
                         <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Text style={{fontWeight: "bold", width: "65%"}}>{comment.author.displayName}</Text>
-                            <Text style={{marginRight: 5, color: "#688281"}}>{formatDate(comment.date)}</Text>
+                            <Text style={{marginRight: 8, color: "#688281", fontSize: 11}}>{formatDate(comment.date)}</Text>
                         </View>
 
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                         <Text>{comment.text}</Text>
+                        <DeleteComment comment={comment}/>
+                        </View>
                     </View>
 
                 </View>

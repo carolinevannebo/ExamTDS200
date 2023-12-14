@@ -1,7 +1,7 @@
 import { IconButton, ScreenTemplate, ProfilePicture, CommentSection } from "../components";
-import { Text, StyleSheet, Image, View, ScrollView, Pressable } from "react-native";
+import { Text, StyleSheet, Image, View, ScrollView, Pressable, RefreshControl } from "react-native";
 import { useUserContext } from "../contexts";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CommentData, Post, User } from "../models";
 import Assets from "../Assets";
 import MapView, { Marker } from 'react-native-maps';
@@ -16,6 +16,8 @@ type PostDetailPageProps = {
 
 const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => {
     const { getUserPost, getUserById, currentUser, setOtherUser } = useUserContext();
+
+    const [refreshing, setRefreshing] = useState(false);
     const [post, setPost] = useState<Post | undefined>(undefined);
     const [user, setUser] = useState<User | undefined>(undefined);
     const [comments, setComments] = useState<CommentData[]>([]);
@@ -25,6 +27,34 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
     });
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        getUserPost(postUserId, postId)
+        .then((post) => {
+            setPost(post);
+            setComments(post?.comments || []);
+
+            setMapRegion({
+                latitude: post?.location?.latitude!,
+                longitude: post?.location?.longitude!,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+        getUserById(postUserId)
+        .then((user) => {
+            setUser(user);
+        }).catch((error) => {
+            console.error(error);
+        });
+
+        setRefreshing(false);
+    }, []);
 
     useEffect(() => {
         getUserPost(postUserId, postId)
@@ -73,7 +103,8 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
         <ScreenTemplate headerPadding={50}>
             <ScrollView
             overScrollMode="auto"
-            contentContainerStyle={styles.container}>
+            contentContainerStyle={styles.container}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
 
             <View style={styles.postContainer}>
 
