@@ -1,5 +1,5 @@
 import { IconButton, ScreenTemplate, ProfilePicture, CommentSection } from "../components";
-import { Text, StyleSheet, Image, View, ScrollView } from "react-native";
+import { Text, StyleSheet, Image, View, ScrollView, Pressable } from "react-native";
 import { useUserContext } from "../contexts";
 import React, { useEffect, useState } from "react";
 import { CommentData, Post, User } from "../models";
@@ -7,6 +7,7 @@ import Assets from "../Assets";
 import MapView, { Marker } from 'react-native-maps';
 import { LinearGradient } from "expo-linear-gradient";
 import { Timestamp } from "firebase/firestore/lite";
+import { navigate } from "../routes";
 
 type PostDetailPageProps = {
     postUserId: string;
@@ -14,7 +15,7 @@ type PostDetailPageProps = {
 }
 
 const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => {
-    const { getUserPost, getUserById, currentUser } = useUserContext();
+    const { getUserPost, getUserById, currentUser, setOtherUser } = useUserContext();
     const [post, setPost] = useState<Post | undefined>(undefined);
     const [user, setUser] = useState<User | undefined>(undefined);
     const [comments, setComments] = useState<CommentData[]>([]);
@@ -49,6 +50,11 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
             console.error(error);
         });
     }, []);
+    
+    const handleNavigate = () => {
+        setOtherUser(user!); // nå krongler du litt
+        navigate("ProfilePage");
+    }
 
     const testComments: CommentData[] = [
         {
@@ -75,12 +81,14 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
                 colors={['#365857', '#688281']}
                 start={{x: 0, y: 0}} end={{x: 0.8, y: 0}}
                 style={styles.header}>
-                    <ProfilePicture size={50} user={user!} style={styles.profilePicture} />
+                <Pressable onPress={handleNavigate}>
+                        <ProfilePicture size={50} user={user!} style={styles.profilePicture} />
+                    </Pressable>
 
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.title}>{user?.displayName}</Text>
-                        <Text style={styles.subTitle}>{user?.userName}</Text>
-                    </View>
+                        <View style={styles.titleContainer}>
+                            <Text style={styles.title}>{user?.displayName}</Text>
+                            <Text style={styles.subTitle}>{user?.userName}</Text>
+                        </View>
                 </LinearGradient>
 
                 <Image source={{uri: post?.imageUrl}} style={styles.image} />

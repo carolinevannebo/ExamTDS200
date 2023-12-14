@@ -10,10 +10,11 @@ import MapView, { Marker } from 'react-native-maps';
 import Assets from '../Assets';
 import { useUserContext } from '../contexts';
 import { navigate } from '../routes';
+import { auth } from '../services/firebaseconfig';
 
 interface ProfilePageProps {
     user: User | null;
-    getUser: () => Promise<void>;
+    getUser?: () => Promise<void>;
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
@@ -32,16 +33,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
         navigate("PostDetailPage", {postUserId: user?.uid, postId: item.imageName});
     }
 
-    const onRefresh = useCallback(() => {
+    const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        getUser().finally(() => setRefreshing(false));
+        if (getUser) {
+            await getUser().finally(() => setRefreshing(false));
+        }
     }, []);
 
-    //useEffect(() => {
-        /*if (user === null) {
-            getUser();
-        }*/
-    //}, [user]);
 
     const galleryItem = ({ item }: { item: Post }) => {
         Image.prefetch(item.imageUrl)
@@ -80,6 +78,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
             </Marker>
         )
     }
+
+    const OpenSettings: React.FC = () => {
+        if (user?.uid === auth.currentUser?.uid) {
+            return <SettingsModal />
+        } else return;
+    };
 
     return (
         <ScreenTemplate headerPadding={0}>

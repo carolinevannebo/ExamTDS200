@@ -5,10 +5,12 @@ import { useState } from "react";
 import { CommentData, User } from "../models";
 import { Timestamp } from "firebase/firestore/lite";
 import UploadService from "../services/UploadService";
-import { TextInput, View, Text } from "react-native";
+import { TextInput, View, Text, Pressable } from "react-native";
 import ProfilePicture from "./ProfilePicture";
 import IconButton from "./IconButton";
 import Assets from "../Assets";
+import { useUserContext } from "../contexts";
+import { navigate } from "../routes";
 
 
 // TODO: refactor this into its own file
@@ -20,6 +22,7 @@ interface CommentSectionProps {
 };
 
 const CommentSection: React.FC<CommentSectionProps> = ({comments, currentUser, postUserId, postId}) => {
+    const { setOtherUser } = useUserContext();
     const [userComment, setUserComment] = useState<string>("");
 
     const handleAddComment = () => {
@@ -46,14 +49,21 @@ const CommentSection: React.FC<CommentSectionProps> = ({comments, currentUser, p
         return `${dateStr}`;
     };
 
+    const handleNavigate = (user: User) => {
+        setOtherUser(user); // nå krongler du litt
+        navigate("ProfilePage");
+    }
+
     return (
         <View style={{borderTopWidth: 0.8, borderTopColor: "#688281"}}>
             {comments.map((comment, index) => (
                 <View key={index} style={{flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginVertical: 5}}>
-                    <ProfilePicture 
-                    size={30} 
-                    user={comment.author} 
-                    style={{marginRight: 10}} />
+                    <Pressable onPress={() => handleNavigate(comment.author)}>
+                        <ProfilePicture 
+                        size={30} 
+                        user={comment.author} 
+                        style={{marginRight: 10}} />
+                    </Pressable>
 
                     <View>
                         <View style={{flexDirection: "row", justifyContent: "space-between"}}>

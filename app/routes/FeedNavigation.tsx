@@ -1,7 +1,7 @@
 // Navigation for the Feed tab
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { HomePage, PostDetailPage } from "../pages";
+import { HomePage, PostDetailPage, ProfilePage } from "../pages";
 import { Text } from "react-native";
 import { useUserContext } from "../contexts";
 import { Fragment} from "react";
@@ -9,7 +9,7 @@ import { Fragment} from "react";
 const { Navigator, Screen } = createNativeStackNavigator();
 
 const FeedNavigation: React.FC = () => {
-    const { otherUsers, getOtherUsers, postUserId, postId } = useUserContext();
+    const { otherUsers, getOtherUsers, getUserById, postUserId, postId, user } = useUserContext();
     
     return (
         <Navigator initialRouteName='HomePage' screenOptions={{headerTransparent: true}}>
@@ -41,6 +41,25 @@ const FeedNavigation: React.FC = () => {
             }}>
                 { () => 
                     <PostDetailPage postUserId={postUserId} postId={postId}/>
+                }
+            </Screen>
+
+            <Screen name="ProfilePage"
+            options={{
+                headerTitle: "",
+                headerLeft: () => (
+                    <Text style={{
+                        color: '#1d4342',
+                        fontSize: 23,
+                        fontWeight: '400',
+                        marginLeft: 20,
+                    }}>{user?.userName ?? "Username"}</Text>
+                ),
+            }}>
+                {() => 
+                    <ProfilePage 
+                        user={user}
+                    />
                 }
             </Screen>
         </Navigator>

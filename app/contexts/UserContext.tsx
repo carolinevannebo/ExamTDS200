@@ -6,6 +6,7 @@ import DownloadService from "../services/DownloadService";
 import { User, Post } from "../models";
 
 export interface IUserContext {
+    user: User | null;
     currentUser: User | null;
     otherUsers: User[];
     postUserId: string;
@@ -14,6 +15,7 @@ export interface IUserContext {
     getOtherUsers: () => Promise<void>;
     setUserIdForPost: (userId: string) => void;
     setIdForPost: (userId: string) => void;
+    setOtherUser: (user: User | null) => void;
     getUserById: (userId: string) => Promise<User | undefined>;
     getUserPost: (userId: string, postId: string) => Promise<Post | undefined>;
 }
@@ -28,6 +30,7 @@ const UserProvider = ({ children }: Props) => {
     const [otherUsers, setOtherUsers] = useState<User[]>([]); 
     const [postUserId, setPostUserId] = useState<string>("");
     const [postId, setPostId] = useState<string>("");
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         //getCurrentUser();
@@ -62,6 +65,10 @@ const UserProvider = ({ children }: Props) => {
         setPostId(userId);
     };
 
+    const setOtherUser = (user: User | null) => {
+        setUser(user);
+    }
+
     const getUserById = async (userId: string) => {
         try {
             const user = await DownloadService.getUserById(userId);
@@ -88,6 +95,7 @@ const UserProvider = ({ children }: Props) => {
     return (
         <UserContext.Provider 
         value={{ 
+            user,
             currentUser, 
             otherUsers,
             postUserId,
@@ -96,6 +104,7 @@ const UserProvider = ({ children }: Props) => {
             getOtherUsers,
             setUserIdForPost,
             setIdForPost,
+            setOtherUser,
             getUserById,
             getUserPost,
         }}>
