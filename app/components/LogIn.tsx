@@ -1,14 +1,14 @@
 // Sign in component for users to log in to their account
-// TODO: refactor, you made this quite early
+// TODO: Refactor, you made this quite early
 
-import { useState } from 'react';
-import { Text, View, TextInput, Pressable, StyleSheet } from 'react-native';
+import { Text, View, TextInput, Pressable, StyleSheet, Alert } from 'react-native';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { navigate, goBack } from '../routes';
 import BackgroundImage from './BackgroundImage';
+import { navigate, goBack } from '../routes';
 import IconButton from './IconButton';
+import { useState } from 'react';
 import Assets from '../Assets';
 
 export const LogIn: React.FC = () => {
@@ -29,6 +29,7 @@ export const LogIn: React.FC = () => {
         })
         .catch((error) => {
             console.log('Error logging in: ', error);
+            Alert.alert('Error logging in', error.message);
         });
     }
 

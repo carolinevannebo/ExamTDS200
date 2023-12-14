@@ -1,7 +1,8 @@
-import { CommentData, Post, User } from "../models";
+// Service to create/update/delete user data in Firebase
+
+import { CommentData, Post } from "../models";
 import { auth, db } from "./firebaseconfig";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import DownloadService from "./DownloadService";
 import { useState } from "react";
 import {  
     ref, 
@@ -15,9 +16,7 @@ import {
     setDoc, 
     GeoPoint, 
     collection, 
-    DocumentData, 
-    serverTimestamp, 
-    DocumentReference,
+    serverTimestamp,
     updateDoc,
     addDoc,
     getDocs,
@@ -30,46 +29,6 @@ const UploadService = (
       const [imageUrl, setImageUrl] = useState<string>('');
       const [imageName, setImageName] = useState<string>('');
       const [imageLocation, setImageLocation] = useState<GeoPoint | undefined>(undefined);
-      //const [post, setPost] = useState<Post>();
-      //const [user, setUser] = useState<User>();
-      //const [postDocRef, setPostDocRef] = useState<DocumentReference<DocumentData, DocumentData>>();
-      //const [userDocRef, setUserDocRef] = useState<DocumentReference<DocumentData, DocumentData>>();
-      /*let userDocRef: DocumentReference<DocumentData, DocumentData>;
-      let postDocRef: DocumentReference<DocumentData, DocumentData>;
-      let post: Post = {
-          imageName: '',
-          imageUrl: '',
-          createdAt: serverTimestamp(),
-          location: undefined,
-          description: '',
-      };
-      let user: User = {
-        uid: '',
-        email: '',
-        userName: '',
-        displayName: '',
-        bio: '',
-        profilePicture: '',
-        following: [],
-        followers: [],
-        posts: [],
-      };*/
-
-        /*const getUserInfo = async () => {
-            const user = auth.currentUser;
-            if (!user) {
-              throw new Error('No user signed in');
-            }
-            const userRef = doc(db, `users/${user.uid}`);
-            const userSnap = await userRef.get();
-          
-            if (userSnap.exists()) {
-              console.log('User data:', userSnap.data());
-              return userSnap.data();
-            } else {
-              console.log('No such user!');
-            }
-      }*/
 
       const getImageName = (fileName: string) => {
           return fileName.slice(0, fileName.lastIndexOf('.'));
@@ -80,8 +39,6 @@ const UploadService = (
           imageName: string, 
           onProgress: any,
           location?: GeoPoint | undefined ) => {
-          //const user = auth.currentUser;
-          //console.log('userID', user?.uid);
           
           if (!auth.currentUser) {
             throw new Error('No user signed in');
@@ -111,60 +68,20 @@ const UploadService = (
               async () => {
                 const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
         
+                if (downloadUrl) {
+                  setImageUrl(downloadUrl);
+                  setImageName(imageName);
+                  setImageLocation(location);
+                }
+
                 // Finally, resolve the promise with the download URL
                 resolve({ 
                   downloadUrl, 
                   metadata: uploadTask.snapshot.metadata,
                 });
-          
-                setImageUrl(downloadUrl);
-                setImageName(imageName);
-                setImageLocation(location);
-
-                // TODO: OMG REFAKTORER DET NED, du kan heller sette downloadurl
-                // Add image to user, sending to firestore
-                //const userImagesCollection = collection(db, `users/${auth.currentUser?.uid}/posts`);
-                //setPostDocRef(doc(userImagesCollection, getImageName(imageName)));
-                /*setPost({
-                  imageName: imageName,
-                  imageUrl: downloadUrl,
-                  createdAt: serverTimestamp(),
-                  location: location,
-                  description: "",
-                });*/
-
-                // Update user profile picture
-                /*const userRef = doc(db, `users/${auth.currentUser?.uid}`);
-                setUserDocRef(userRef);
-                DownloadService.getCurrentUser()
-                .then((user) => {
-                  setUser(user);
-                })
-                .then(() => { // er ikke bra å bruke så mye force unwrap
-                  user!.profilePicture = downloadUrl;
-                  console.log('user has modified profile picture', user);
-                })
-                .then(() => {
-                  setDoc(userRef, user);
-                })
-                .catch((error) => {
-                  console.error('Error updating user profile picture:', error);
-                });*/
-
-                //postDocRef = doc(userImagesCollection, getImageName(imageName));
-        
-                /*post = {
-                  imageName: imageName,
-                  imageUrl: downloadUrl,
-                  createdAt: serverTimestamp(),
-                  location: location,
-                  description: "",
-                };*/
-                //console.log('post', post);
-                  //uploadPost(post);
-              }
+              },
             );
-          })
+          });
       };
 
       const uploadProfilePicture = () => {
@@ -210,10 +127,21 @@ const UploadService = (
       };
 
       const uploadPost = (withDescription: string) => {
-          //post!.description = withDescription;
-          //console.log('post with description', post);
           const userImagesCollection = collection(db, `users/${auth.currentUser?.uid}/posts`);
-          const postDocRef = doc(userImagesCollection, imageName);
+          console.log("Image name in uploadPost: " + imageName)
+
+          if (!auth.currentUser) {
+            throw new Error('No user signed in');
+          }
+          if (!imageUrl) {
+            throw new Error('No image URL provided');
+          }
+
+          if (!imageName) {
+            throw new Error('No image name provided');
+          }
+
+          const postDocRef = doc(userImagesCollection, imageName); // is it possible imagename is not set?
           const post: Post = {
             imageName: imageName,
             imageUrl: imageUrl,
@@ -247,7 +175,7 @@ const UploadService = (
         });
       };
 
-      // Note: you should've just added id to each comment, this is too much work
+      // Note: you should've just added id to each comment, this is unnecessary
       const deleteComment = async (userId: string, postId: string, comment: CommentData) => {
         const commentsCollectionRef = collection(db, `users/${userId}/posts/${postId}/comments`);
         const commentsSnapshot = await getDocs(commentsCollectionRef);
@@ -279,6 +207,7 @@ const UploadService = (
         }
       };
           
+      // Unused at the moment
       const listFiles = async () => {
           const user = auth.currentUser;
           const listRef = ref(getStorage(), `images/${user?.uid}/`);
@@ -288,7 +217,6 @@ const UploadService = (
       };
 
       return {
-          //post,
           uploadImage,
           uploadProfilePicture,
           uploadDisplayName,

@@ -1,17 +1,19 @@
 // Sign up component for user registration
-// TODO: refactor, you made this quite early
+// TODO: Refactor, you made this quite early
 
-import { Text, View, TextInput, Pressable, StyleSheet } from 'react-native';
-import { useState } from 'react';
-import { db, auth } from '../services/firebaseconfig';
+// TODO: Move backend logic
 import { collection, doc, setDoc, query, where, getDocs } from 'firebase/firestore/lite';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { createUserWithEmailAndPassword} from 'firebase/auth';
-import { navigate, goBack } from '../routes';
+import { db, auth } from '../services/firebaseconfig';
+
+import { Text, View, TextInput, Pressable, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import BackgroundImage from './BackgroundImage';
+import { navigate, goBack } from '../routes';
 import IconButton from './IconButton';
+import { useEffect, useState } from 'react';
 import Assets from '../Assets';
 
 export const Register: React.FC = () => {
@@ -27,6 +29,7 @@ export const Register: React.FC = () => {
     message: 'Please fill out all fields'
   });
 
+  // BUG: Both password fields use the same state
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   }
@@ -47,6 +50,9 @@ export const Register: React.FC = () => {
         message: 'Password must be at least 6 characters'
       });
     }
+  }
+
+  const validateRepassword = (password: string, repassword: string) => {
     if (password !== repassword) {
       setIsValid({
         bool: false,
@@ -62,10 +68,11 @@ export const Register: React.FC = () => {
     validateField(name);
     validateField(userName);
     validatePassword(password);
+    validateRepassword(password, repassword);
 
     if (isValid.bool) {
-    const usersCollection = collection(db, 'users');
-    const userQuery = query(usersCollection, where('userName', '==', userName));
+      const usersCollection = collection(db, 'users');
+      const userQuery = query(usersCollection, where('userName', '==', userName));
       getDocs(userQuery)
       .then((querySnapshot) => {
         if (querySnapshot.empty) {
@@ -95,6 +102,10 @@ export const Register: React.FC = () => {
               })
               .catch((error) => {
                 console.error('Error storing user data in AsyncStorage:', error);
+                setIsValid({
+                  bool: false,
+                  message: error.message
+                });
               });
           })
           .catch((error) => {
@@ -113,7 +124,13 @@ export const Register: React.FC = () => {
           message: error.message
         });
       });
-    };
+    } else {
+      Alert.alert('Error', isValid.message);
+      setIsValid({
+        bool: true,
+        message: ''
+      });
+    }
   };
 
   return (

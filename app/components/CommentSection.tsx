@@ -1,5 +1,5 @@
 // Comment section for post detail page
-// TODO: refactor styles
+// TODO: Refactor styles
 
 import { useState } from "react";
 import { CommentData, User } from "../models";
@@ -12,8 +12,6 @@ import Assets from "../Assets";
 import { useUserContext } from "../contexts";
 import { navigate } from "../routes";
 
-
-// TODO: refactor this into its own file
 interface CommentSectionProps {
     comments: CommentData[];
     currentUser: User;
@@ -36,7 +34,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({comments, currentUser, p
 
         comments.push(newComment);
         console.log(newComment);
-        // TODO: send to firebase OK
         UploadService.uploadComment(postUserId, postId, newComment);
 
         setUserComment("");
@@ -72,6 +69,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({comments, currentUser, p
                 fill="#365857"/>}
                 onPress={() => handleDeleteComment(comment)}
                 style={{marginRight: 5}}/>
+        } else {
+            return <View style={{marginRight: 5, width: 22, height: 22}}/>
         }
     }
 

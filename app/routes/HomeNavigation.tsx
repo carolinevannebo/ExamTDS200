@@ -1,15 +1,13 @@
 // Navigation tabs for logged in users
 
-import { View, Text } from "react-native";
-import { useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ModalStateProvider, UserProvider, useModalStateContext, useUserContext } from "../contexts";
-import { HomePage, ProfilePage } from "../pages";
-import { IconButton } from '../components';
-import Assets from "../Assets";
 import { LinearGradient } from "expo-linear-gradient";
-import FeedNavigation from "./FeedNavigation";
 import ProfileNavigation from "./ProfileNavigation";
+import FeedNavigation from "./FeedNavigation";
+import { useModalStateContext } from "../contexts";
+import { IconButton } from '../components';
+import { View} from "react-native";
+import Assets from "../Assets";
 
 const Tab = createBottomTabNavigator();
 

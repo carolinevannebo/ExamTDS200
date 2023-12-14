@@ -2,8 +2,8 @@
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ProfilePage, PostDetailPage } from "../pages";
-import { Text } from "react-native";
 import { useUserContext } from "../contexts";
+import { Text } from "react-native";
 import { Fragment } from "react";
 
 const { Navigator, Screen } = createNativeStackNavigator();
@@ -35,13 +35,12 @@ const ProfileNavigation: React.FC = () => {
 
             <Screen 
             name="PostDetailPage"
-            options={{
+            options={   /* Adding fragment to header is just a workaround for visuals */
+            {
                 headerTitle: "",
                 headerLeft: () => (<Fragment></Fragment>),
             }}>
-                { () => 
-                    <PostDetailPage postUserId={postUserId} postId={postId}/>
-                }
+                { () => <PostDetailPage postUserId={postUserId} postId={postId}/>}
             </Screen>
         </Navigator>
     )

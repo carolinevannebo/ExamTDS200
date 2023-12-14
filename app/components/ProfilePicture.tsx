@@ -1,5 +1,7 @@
-import Assets from "../Assets";
+// Reusable circle profile picture component
+
 import { Image, ImageStyle, StyleSheet } from "react-native";
+import Assets from "../Assets";
 import { User } from "../models";
 
 interface ProfilePictureProps {

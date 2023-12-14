@@ -1,13 +1,19 @@
+// Detail page for post
+// TODO: setMapRegion based on last post location?
+// BUG: When user navigates to profile page of the post author,
+//      and then chooses to open another post detail page from the gallery,
+//      app navigates to the first post detail page again. Follow up on this.
+
 import { IconButton, ScreenTemplate, ProfilePicture, CommentSection } from "../components";
 import { Text, StyleSheet, Image, View, ScrollView, Pressable, RefreshControl } from "react-native";
-import { useUserContext } from "../contexts";
-import React, { useCallback, useEffect, useState } from "react";
-import { CommentData, Post, User } from "../models";
-import Assets from "../Assets";
-import MapView, { Marker } from 'react-native-maps';
+import { useCallback, useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Timestamp } from "firebase/firestore/lite";
+import MapView, { Marker } from 'react-native-maps';
+import { CommentData, Post, User } from "../models";
+import { useUserContext } from "../contexts";
 import { navigate } from "../routes";
+import Assets from "../Assets";
 
 type PostDetailPageProps = {
     postUserId: string;
@@ -56,6 +62,7 @@ const PostDetailPage: React.FC<PostDetailPageProps> = ({postUserId, postId}) => 
         setRefreshing(false);
     }, []);
 
+    // TODO: investigate this again
     useEffect(() => {
         getUserPost(postUserId, postId)
         .then((post) => {

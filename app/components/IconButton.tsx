@@ -1,3 +1,5 @@
+// Reusable icon button component
+
 import { GestureResponderEvent, Pressable, StyleProp, ViewStyle } from "react-native";
 import { SvgProps } from "react-native-svg";
 

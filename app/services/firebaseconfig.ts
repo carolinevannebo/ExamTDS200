@@ -1,7 +1,8 @@
 // Firebase configuration file
+// NOTE: Initially used .env files, which worked fine for auth, but not for firestore
+// TODO: Investigate why .env files don't work for db and follow up on this
+// TODO: Move storage into this file, should not be in UploadService
 
-import { User } from '../models/User';
-import { Post } from '../models/Post';
 import { Platform } from 'react-native';
 import { navigate } from '../routes/NavigationRef';
 import { initializeApp } from 'firebase/app';

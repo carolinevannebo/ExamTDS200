@@ -1,18 +1,28 @@
 // Modal for creating a post
-// TODO: refactor, error alerts
+// TODO: Refactor, add error alerts, handle errors
+// BUG: FB Storage reached max capacity error is not handled
 
-import { useState, useEffect } from 'react';
-import { Modal, StyleSheet, Text, Pressable, Alert, View, Image, TextInput, Keyboard } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { GeoPoint } from 'firebase/firestore/lite';
-import { useModalStateContext } from "../contexts";
 import UploadService from '../services/UploadService';
+import { useModalStateContext } from "../contexts";
+import { GeoPoint } from 'firebase/firestore/lite';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import LoadingSpinner from './LoadingSpinner';
+import { useState, useEffect } from 'react';
 import IconButton from './IconButton';
 import Assets from '../Assets';
-import { LinearGradient } from 'expo-linear-gradient';
+import { 
+    Text, 
+    View, 
+    Alert, 
+    Modal, 
+    Image, 
+    Keyboard,
+    Pressable, 
+    TextInput, 
+    StyleSheet, 
+} from 'react-native';
 
 const CreatePostModal: React.FC = () => {
     const { isModalVisible, closeModal } = useModalStateContext();
@@ -28,6 +38,7 @@ const CreatePostModal: React.FC = () => {
 
     const [imageDescription, setImageDescription] = useState("");
 
+    // TODO: investigate this again
     useEffect(() => {
         (async () => {
       
@@ -104,17 +115,18 @@ const CreatePostModal: React.FC = () => {
             
             await UploadService.uploadImage(uri, fileName, (progress: any) => 
                 console.log(progress), location
-            ).then(() => {
-                UploadService.uploadPost(imageDescription);
-                // check if successful:
-                // ?
-                // then:
+            )
+            .then(() => {
+                UploadService.uploadPost(imageDescription)
+            })
+            .catch((error) => {
+                Alert.alert('Error', (error as Error).message);
+                console.log(error);
+            })
+            .finally(() => {
                 setIsLoading(false);
                 setFile(undefined);
-                // finally:
                 closeModal();
-            }).catch((error) => {
-                console.log(error);
             });
         }
     };

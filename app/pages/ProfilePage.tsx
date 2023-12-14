@@ -1,16 +1,27 @@
 // User profile page
-// TODO: Refaktorer etter klokka 02:00, limit is reached:)))
+// TODO: Rendering is slow, see if you can optimize it
+// TODO: setMapRegion based on last post location?
+// BUG: User can open settings modal (to update their own data) from other users' profile pages
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { Text, StyleSheet, View, Image, ScrollView, FlatList, RefreshControl, ImageErrorEventData, ImageLoadEventData, ImageComponent, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScreenTemplate, SettingsModal, ProfilePicture } from '../components';
-import { Post, User } from '../models';
+import { useCallback, useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker } from 'react-native-maps';
-import Assets from '../Assets';
-import { useUserContext } from '../contexts';
-import { navigate } from '../routes';
 import { auth } from '../services/firebaseconfig';
+import { useUserContext } from '../contexts';
+import { Post, User } from '../models';
+import { navigate } from '../routes';
+import { 
+    Text, 
+    View, 
+    Image, 
+    FlatList, 
+    Pressable,
+    StyleSheet, 
+    ScrollView, 
+    RefreshControl, 
+    ImageErrorEventData, 
+} from 'react-native';
 
 interface ProfilePageProps {
     user: User | null;
@@ -29,11 +40,10 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
     });
 
     useEffect(() => {
-        if (user) {
-            setPostCount(user.posts.length);
-        }
+        if (user) { setPostCount(user.posts.length) }
     }, []);
 
+    // TODO: rename
     const handlePress = (item: Post) => {
         setUserIdForPost(user?.uid!);
         setIdForPost(item.imageName);
@@ -42,12 +52,22 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        if (getUser) {
-            await getUser().finally(() => setRefreshing(false));
+        try {
+            if (getUser) {
+                await getUser()
+                .then(() => {
+                    if (user) { setPostCount(user.posts.length) }
+                })
+            } else throw new Error("getUser is undefined");
+        } catch (error) {
+            console.log("Error during refresh: ", error)
+        } finally {
+            setRefreshing(false)
         }
     }, []);
 
 
+    // TODO: explain issues with rendering images in README
     const galleryItem = ({ item }: { item: Post }) => {
         Image.prefetch(item.imageUrl)
         .catch((error: ImageErrorEventData) => {
@@ -86,6 +106,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
         )
     }
 
+    // TODO: fix bug where user can open settings modal from other users' profile pages
     const OpenSettings: React.FC = () => {
         if (user?.uid === auth.currentUser?.uid) {
             return <SettingsModal />
@@ -106,7 +127,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
                     <ProfilePicture size={100} user={user!}/>
 
                     <View style={styles.headerTextBox}>
-                        <Text style={[styles.headerTitle, styles.text]}>{user?.displayName ?? "Username"}</Text>
+                        <Text style={[styles.headerTitle, styles.text]}>{user?.displayName ?? "User"}</Text>
                         <Text style={styles.text}>{user?.bio !== "" ? user?.bio : "No biography provided"}</Text>
                         
                         <View style={styles.headerInfo}>
@@ -150,13 +171,6 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
 };
 
 export default ProfilePage;
-
-/**<View style={[styles.gallery]}>
-                    {posts.map((_, index) => (
-                        galleryItem({ item: posts[index] })
-                    ))}
-                </View> */
-
 
 const styles = StyleSheet.create({
     container: {

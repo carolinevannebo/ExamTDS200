@@ -1,7 +1,6 @@
 // Navigation hook for routing
 
 import { useNavigation, NavigationProp } from "@react-navigation/native";
-import { User, Post } from "../models";
 
 export type RouteList = {
     WelcomePage: undefined;
@@ -13,7 +12,7 @@ export type RouteList = {
     HomePage: undefined;
     ProfilePage: undefined,
     PostDetailPage?: {postUserId: string, postId: string},
-}; // du trenger ikke alle routes her?
+};
 
 type OwnNavigationProp = NavigationProp<RouteList>;
 

@@ -10,6 +10,7 @@ export interface Post {
     comments?: CommentData[];
 }
 
+// TODO: Reafactor to use authorId instead of author, you will get nesting errors in FB
 export interface CommentData {
     author: User;
     text: string;

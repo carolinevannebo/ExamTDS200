@@ -1,3 +1,6 @@
+// Assets used in the app
+// TODO: Require cycle warnings appeared after refactoring to index files, follow up on this
+
 import Add from './assets/icons/Add.svg'
 import Back from './assets/icons/Back.svg'
 import Camera from './assets/icons/Camera.svg'

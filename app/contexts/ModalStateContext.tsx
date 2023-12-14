@@ -1,4 +1,4 @@
-// Context for create post modal to use across components
+// Context for modals to use across components
 
 import { useState, createContext, ReactNode, useContext } from "react";
 

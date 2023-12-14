@@ -1,10 +1,9 @@
 // Welcome page for first time users
 
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { navigate } from '../routes';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BackgroundImage from '../components/BackgroundImage';
+import { navigate } from '../routes';
 
 const WelcomePage: React.FC = () => {
 
@@ -18,28 +17,28 @@ const WelcomePage: React.FC = () => {
 
     return (
         <BackgroundImage>
-        <SafeAreaView style={styles.container}>
-            <View style={styles.subContainer}>
-                <Text style={styles.title}>Welcome to Travel Snap!</Text>
-                <Text style={styles.subTitle}>Sign up or log in to get started!</Text>
+            <SafeAreaView style={styles.container}>
+                <View style={styles.subContainer}>
+                    <Text style={styles.title}>Welcome to Travel Snap!</Text>
+                    <Text style={styles.subTitle}>Sign up or log in to get started!</Text>
 
-                <Pressable 
-                style={styles.button}
-                onPress={handleSignUp}>
-                    <Text style={styles.text}>
-                    Sign up
-                    </Text>
-                </Pressable>
+                    <Pressable 
+                    style={styles.button}
+                    onPress={handleSignUp}>
+                        <Text style={styles.text}>
+                        Sign up
+                        </Text>
+                    </Pressable>
 
-                <Pressable 
-                style={styles.button}
-                onPress={handleLogIn}>
-                    <Text style={styles.text}>
-                    Log in
-                    </Text>
-                </Pressable>
-            </View>
-        </SafeAreaView>
+                    <Pressable 
+                    style={styles.button}
+                    onPress={handleLogIn}>
+                        <Text style={styles.text}>
+                        Log in
+                        </Text>
+                    </Pressable>
+                </View>
+            </SafeAreaView>
         </BackgroundImage>
     );
 };

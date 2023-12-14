@@ -1,5 +1,4 @@
 // Context for user data to use across components
-//TODO: fjern posts
 
 import { useEffect, useState, createContext, ReactNode, useContext } from "react";
 import DownloadService from "../services/DownloadService";

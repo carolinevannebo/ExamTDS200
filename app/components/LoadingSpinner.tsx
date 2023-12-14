@@ -1,4 +1,5 @@
 // Simple loading animation for uploading posts
+// TODO: Change colors
 
 import { Modal, ActivityIndicator, StyleSheet, View } from 'react-native';
 

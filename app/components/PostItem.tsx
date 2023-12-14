@@ -1,11 +1,14 @@
+// Post item component for posts in the feed
+// TODO: Refactor styles
+
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import IconButton from './IconButton';
 import ProfilePicture from "./ProfilePicture";
-import { Post, User } from "../models";
-import Assets from "../Assets";
-import { navigate, setParams } from "../routes";
 import { useUserContext } from "../contexts";
+import { Post, User } from "../models";
+import IconButton from './IconButton';
+import { navigate } from "../routes";
+import Assets from "../Assets";
 
 interface PostItemProps {
     user: User;
@@ -14,7 +17,6 @@ interface PostItemProps {
 
 const PostItem: React.FC<PostItemProps> = ({item, user}: PostItemProps) => {
     const { setUserIdForPost, setIdForPost } = useUserContext();
-    console.log("user in postitem: ", user.userName);
 
     const handlePress = () => {
         setUserIdForPost(user.uid!);
@@ -43,10 +45,6 @@ const PostItem: React.FC<PostItemProps> = ({item, user}: PostItemProps) => {
 }
 
 export default PostItem;
-
-/*<IconButton
-    Icon={() => <Assets.icons.Comment width={30} height={30} fill="#021c1b"/>} 
-    onPress={() => {}} style={{padding: 10}} />*/
 
 const styles = StyleSheet.create({
     profilePicture: {

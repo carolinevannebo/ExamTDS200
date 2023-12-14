@@ -2,19 +2,20 @@
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { HomePage, PostDetailPage, ProfilePage } from "../pages";
-import { Text } from "react-native";
 import { useUserContext } from "../contexts";
+import { Text } from "react-native";
 import { Fragment} from "react";
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
 const FeedNavigation: React.FC = () => {
-    const { otherUsers, getOtherUsers, getUserById, postUserId, postId, user } = useUserContext();
+    const { otherUsers, getOtherUsers, postUserId, postId, user } = useUserContext();
     
     return (
         <Navigator initialRouteName='HomePage' screenOptions={{headerTransparent: true}}>
             <Screen 
             name="HomePage"
+            component={HomePage}
             options={{
                 headerTitle: "",
                 headerLeft: () => (
@@ -25,23 +26,19 @@ const FeedNavigation: React.FC = () => {
                         marginLeft: 20
                     }}>Explore</Text>
                 ),
-            }}>
-                {() => 
-                    <HomePage users={otherUsers} getUsers={getOtherUsers} />
-                }
-            </Screen>
+            }}/>
+                {/*() => <HomePage users={otherUsers} getUsers={getOtherUsers} />*/}
+            {/*</Screen>*/}
 
             <Screen 
-            name="PostDetailPage" 
-            //component={PostDetailPage}
+            name="PostDetailPage"
             initialParams={{item: undefined, user: undefined}}
-            options={{
+            options={   /* Adding fragment to header is just a workaround for visuals */
+            {
                 headerTitle: "",
                 headerLeft: () => (<Fragment></Fragment>),
             }}>
-                { () => 
-                    <PostDetailPage postUserId={postUserId} postId={postId}/>
-                }
+                { () => <PostDetailPage postUserId={postUserId} postId={postId}/>}
             </Screen>
 
             <Screen name="ProfilePage"
@@ -56,11 +53,7 @@ const FeedNavigation: React.FC = () => {
                     }}>{user?.userName ?? "Username"}</Text>
                 ),
             }}>
-                {() => 
-                    <ProfilePage 
-                        user={user}
-                    />
-                }
+                {() => <ProfilePage user={user}/>}
             </Screen>
         </Navigator>
     )

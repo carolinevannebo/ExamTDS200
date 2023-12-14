@@ -1,4 +1,5 @@
-import React from 'react';
+// Background image to wrap around welcome page, register and login components
+
 import { Platform, StyleSheet } from 'react-native';
 import { ImageBackground } from 'react-native';
 import Assets from '../Assets';
