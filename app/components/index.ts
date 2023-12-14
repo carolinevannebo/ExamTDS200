@@ -8,6 +8,7 @@ import PostItem from "./PostItem";
 import BackgroundImage from "./BackgroundImage";
 import ScreenTemplate from "./ScreenTemplate";
 import ProfilePicture from "./ProfilePicture";
+import CommentSection from "./CommentSection";
 
 export { 
     CreatePostModal, 
@@ -19,5 +20,6 @@ export {
     PostItem,
     BackgroundImage,
     ScreenTemplate,
-    ProfilePicture
+    ProfilePicture,
+    CommentSection
 };

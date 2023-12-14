@@ -13,27 +13,14 @@ interface HomePageProps {
 }
 
 const HomePage: React.FC<HomePageProps> = ({users, getUsers}) => {
-    //const { otherUsers, getOtherUsers } = useUserContext();
     const [refreshing, setRefreshing] = useState(false);
-    //const [users, setUsers] = useState<User[]>([]);
 
     console.log("otherUsers in homepage: ", users)
 
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         getUsers().finally(() => setRefreshing(false));
-        setRefreshing(false);
     }, []);
-
-    /*useEffect(() => {
-        console.log("homepage users: ", otherUsers);
-        setUsers(otherUsers);
-    }, [users])*/
-
-    /*useEffect(() => {
-        getUsers();
-    }, []);*/
-
 
     return (
         <ScreenTemplate headerPadding={50}>

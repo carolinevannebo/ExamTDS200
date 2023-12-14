@@ -1,22 +1,15 @@
+// Navigation for the Profile tab
+
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ProfilePage, PostDetailPage } from "../pages";
-import { View, Text } from "react-native";
-import { IconButton } from "../components";
-import { useModalStateContext, useUserContext } from "../contexts";
-import Assets from "../Assets";
-import { useEffect } from "react";
+import { Text } from "react-native";
+import { useUserContext } from "../contexts";
+import { Fragment } from "react";
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
 const ProfileNavigation: React.FC = () => {
-    const { currentUser, getCurrentUser } = useUserContext();
-    const { openModal } = useModalStateContext();
-
-    /*useEffect(() => {
-        if (currentUser === undefined) {
-            getCurrentUser();
-        }
-    }, []);*/
+    const { currentUser, getCurrentUser, postUserId, postId } = useUserContext();
     
     return (
         <Navigator initialRouteName='ProfilePage' screenOptions={{headerTransparent: true}}>
@@ -40,7 +33,16 @@ const ProfileNavigation: React.FC = () => {
                 }
             </Screen>
 
-            {/*<Screen name="PostDetailPage" component={PostDetailPage} />*/}
+            <Screen 
+            name="PostDetailPage"
+            options={{
+                headerTitle: "",
+                headerLeft: () => (<Fragment></Fragment>),
+            }}>
+                { () => 
+                    <PostDetailPage postUserId={postUserId} postId={postId}/>
+                }
+            </Screen>
         </Navigator>
     )
 }

@@ -1,25 +1,20 @@
+// Navigation for the Feed tab
+
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { HomePage, PostDetailPage } from "../pages";
-import { View, Text } from "react-native";
-import { IconButton } from "../components";
-import { useModalStateContext, useUserContext } from "../contexts";
-import Assets from "../Assets";
-import { Fragment, useEffect } from "react";
-import { goBack } from "./NavigationRef";
-import { User } from "../models";
+import { Text } from "react-native";
+import { useUserContext } from "../contexts";
+import { Fragment} from "react";
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
 const FeedNavigation: React.FC = () => {
-    const { otherUsers, getOtherUsers } = useUserContext();
-    const { postUserId, postId } = useUserContext();
-    //const { openModal } = useModalStateContext();
+    const { otherUsers, getOtherUsers, postUserId, postId } = useUserContext();
     
     return (
         <Navigator initialRouteName='HomePage' screenOptions={{headerTransparent: true}}>
             <Screen 
             name="HomePage"
-            //component={HomePage}
             options={{
                 headerTitle: "",
                 headerLeft: () => (

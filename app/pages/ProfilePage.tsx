@@ -2,12 +2,14 @@
 // TODO: Refaktorer etter klokka 02:00, limit is reached:)))
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { Text, StyleSheet, View, Image, ScrollView, FlatList, RefreshControl, ImageErrorEventData, ImageLoadEventData, ImageComponent } from 'react-native';
+import { Text, StyleSheet, View, Image, ScrollView, FlatList, RefreshControl, ImageErrorEventData, ImageLoadEventData, ImageComponent, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScreenTemplate, SettingsModal, ProfilePicture } from '../components';
 import { Post, User } from '../models';
 import MapView, { Marker } from 'react-native-maps';
 import Assets from '../Assets';
+import { useUserContext } from '../contexts';
+import { navigate } from '../routes';
 
 interface ProfilePageProps {
     user: User | null;
@@ -15,6 +17,7 @@ interface ProfilePageProps {
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
+    const { setUserIdForPost, setIdForPost } = useUserContext();
     const [refreshing, setRefreshing] = useState(false);
     const [mapRegion, setMapRegion] = useState({
         latitude: 59.91121,
@@ -23,16 +26,22 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
         longitudeDelta: 0.0421,
     });
 
+    const handlePress = (item: Post) => {
+        setUserIdForPost(user?.uid!);
+        setIdForPost(item.imageName);
+        navigate("PostDetailPage", {postUserId: user?.uid, postId: item.imageName});
+    }
+
     const onRefresh = useCallback(() => {
         setRefreshing(true);
         getUser().finally(() => setRefreshing(false));
     }, []);
 
-    useEffect(() => {
+    //useEffect(() => {
         /*if (user === null) {
             getUser();
         }*/
-    }, [user]);
+    //}, [user]);
 
     const galleryItem = ({ item }: { item: Post }) => {
         Image.prefetch(item.imageUrl)
@@ -47,10 +56,12 @@ const ProfilePage: React.FC<ProfilePageProps> = ({user, getUser}) => {
 
         return (
             <View key={item.imageName}>
+                <Pressable onPress={() => handlePress(item)}>
                 <Image
                 source={{ uri: item.imageUrl}} 
                 style={{ width: 110, height: 110, marginVertical: 5, borderRadius: 5 }}
                 onError={() => {}} />
+                </Pressable>
             </View>
         )
     };
