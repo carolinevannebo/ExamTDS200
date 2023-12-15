@@ -12,7 +12,7 @@ Regardless of your conclusion made for Task 1 about the suggested development ap
 The four points mentioned above present the minimum requirement for the assignment. For those aiming for a higher grade, more functionalities and complexity in the implementation is expected.
 
 ## Solution
-### This cross-platform solution is written in TypeScript using React Native and Expo. The application has been tested with the Expo Go app on iPhone and iOS simulator.
+### This cross-platform solution is written in TypeScript using React Native and Expo. The application has been tested with Expo Go on iPhone and iOS simulator.
 
 ### Features
 - User management with Firebase Authentication and Firestore.
@@ -33,7 +33,7 @@ The four points mentioned above present the minimum requirement for the assignme
 ### Usage
 - npm i
 - npx expo start
-- s
+- s (switch to expo go)
 - scan QR code
 
 ### Packages
@@ -62,7 +62,7 @@ The four points mentioned above present the minimum requirement for the assignme
 - uuid 9.0.1
 
 ## Notes
-- The application should be run with EXPO GO. 
+- This application should be run with EXPO GO. 
 - During this project I've tested development build for iOS and Web. However, this was purely for my own curiousity, so development build has not been updated and should not be considered.
 - The last 24 hours before delivery, the project reached the max quota in Firebase storage. Before this, uploading images worked as expected. I am currently unable to test this functionality again before the deadline without upgrading my plan. See screenshot attatchments.
 - Initially the app used expo-router, this is no longer used other than entering the app. Project should be restructured.
@@ -74,8 +74,8 @@ The four points mentioned above present the minimum requirement for the assignme
 - Implement a button with a magnifying glass icon in the feed page. Upon clicking, search field should expand and component should handle search by usernames, captions, or locations. Last one could be handled with a reverse geocoding API: https://openweathermap.org/api/geocoding-api
 - Refactor styles into a styleguide or use nativewind. It is bad practice to have a stylesheet for every file.
 - Refactor repeating functions in download service to improve reusability and readability.
-- Move register component's backend logic. Seperate concerns.
 - Move imagepicker logic into it's own file for reusability. Repeating code is bad practice.
+- Move register component's backend logic. Seperate concerns.
 - Set map region for profile page based on last post location.
 
 ### Warnings
@@ -83,7 +83,7 @@ The four points mentioned above present the minimum requirement for the assignme
 
 ### Bugs
 - Data loading: Sometimes when first starting the app as an already logged in user, the feed page is blank as it renders empty before data is loaded. Switching tab and re-entering will display posts as expected.
-- User state: After logging out as user1 and logging in as user2, user1's profile page is still displayed until resfreshing or re-entering profile page.
+- User state: After logging out as userX and logging in as userY, userX's profile page is still displayed until resfreshing or re-entering profile page.
 - Rendering: Upon Firebase storage error "Failed to load" when denied access, images that are not rendered still takes up whitespace.
 - Unexpected behavior: When logged in user navigates to another user's profile page, they can open the settings modal and edit their own data.
 - Unexpected behavior: When registering as a new user, input validation for repeat password does not update as it should after wrong input. For example: "repeat password does not match password", changing it to correct password will still lead to error alert.
@@ -94,3 +94,4 @@ The four points mentioned above present the minimum requirement for the assignme
 ## Sources
 - Nguyen, J. (2022, March 12). React-Navigation Gradient Background - John Nguyen - Medium. Medium. https://medium.com/@dev-john-nguyen/react-navigation-gradient-background-fc8d929386df
 - Aaron Saunders. (2023, June 7). React Native Expo Firebase - Simplify Your Image Uploads with Image Picker Camera [ Video ]. YouTube. https://www.youtube.com/watch?v=tX_HPvwB-5c
+- GeeksforGeeks. (2023, September 12). How to show and hide password in React Native. https://www.geeksforgeeks.org/how-to-show-and-hide-password-in-react-native/

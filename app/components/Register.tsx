@@ -1,4 +1,5 @@
 // Sign up component for user registration
+// Show/hide password source: (GeeksforGeeks, 2023)
 // TODO: Refactor, you made this quite early
 
 // TODO: Move backend logic
