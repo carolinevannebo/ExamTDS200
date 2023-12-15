@@ -3,7 +3,7 @@
 This technical task is built on top of the theoretical analysis from Task 1. 
 Regardless of your conclusion made for Task 1 about the suggested development approach, you should develop the TravelSnap application using either Ionic + Vue or React Native for frontend, and Firebase as backend as a service.
 
-## Four primary requirements for implementation (no priority order by numbering):
+### Four primary requirements for implementation (no priority order by numbering):
 - Present an overview of all traveller photos that are retrieved from Firebase. This can, for example, to be in a list or grid format.
 - Ensure that each travel photo is clickable to access a detailed view or information.
 - Develop a secure and intuitive interface where users can upload new traveller photos directly from camera or select from existing gallery. Along with the photo, users shall be able to add captions and additional information before storing in Firebase.
@@ -12,6 +12,7 @@ Regardless of your conclusion made for Task 1 about the suggested development ap
 The four points mentioned above present the minimum requirement for the assignment. For those aiming for a higher grade, more functionalities and complexity in the implementation is expected.
 
 ## Solution
+### This cross-platform solution is written in TypeScript using React Native and Expo. The application has been tested with the Expo Go app on iPhone and iOS simulator.
 
 ### Features
 - User management with Firebase Authentication and Firestore.
@@ -36,9 +37,32 @@ The four points mentioned above present the minimum requirement for the assignme
 - scan QR code
 
 ### Packages
+- @babel/core 7.20.0
+- @expo/vector-icons 13.0.0
+- @react-navigation/native 6.1.9
+- @react-navigation/native-stack 6.9.17
+- babel-preset-expo 9.5.2
+- expo 49.0.21
+- expo-build-properties 0.8.3
+- expo-image-picker 14.3.2
+- expo-linear-gradient 12.5.0
+- expo-location 16.1.0
+- expo.router 2.0.0
+- firebase 10.7.1
+- react 18.2.0
+- react-native 0.72.6
+- react-native-async-storage/async-storage 1.21.0
+- react-native-gesture-handler 2.12.0
+- react-native-maps 1.8.3
+- react-native-safe-area-context 4.6.3
+- react-native-svg 14.1.0
+- react-native-svg-transformer 1.1.0
+- react-refresh 5.1.3
+- typescript 5.1.3
+- uuid 9.0.1
 
 ## Notes
-- The application should be run with expo go. During this project I've tested both expo go and development build for iOS and web. However, development build for iOS has not been updated and should not be considered.
+- The application should be run with EXPO GO. During this project I've tested both expo go and development build for iOS and web. However, development build for iOS has not been updated and should not be considered.
 - The last 24 hours before delivery, the project reached the max quota in Firebase storage. Before this, uploading images worked as expected. I am currently unable to test this functionality again before the deadline without upgrading my plan. See screenshot attatchments.
 - Initially the app used expo-router, this is no longer used other than entering the app. Project should be restructured.
 
@@ -66,7 +90,6 @@ The four points mentioned above present the minimum requirement for the assignme
 - Navigation: When user navigates to profile page of the post author, and then chooses to open another post detail page from the gallery, it navigates to the first post detail page again. State is not changed.
 - Firestore throws errors when firebase config properties are located in .env.
 
-
-### Sources
+## Sources
 - Nguyen, J. (2022, March 12). React-Navigation Gradient Background - John Nguyen - Medium. Medium. https://medium.com/@dev-john-nguyen/react-navigation-gradient-background-fc8d929386df
-- Aaron Saunders. (2023, June 7). React Native Expo Firebase -   Simplify Your Image Uploads with Image Picker Camera [ Video ]. YouTube. https://www.youtube.com/watch?v=tX_HPvwB-5c
+- Aaron Saunders. (2023, June 7). React Native Expo Firebase - Simplify Your Image Uploads with Image Picker Camera [ Video ]. YouTube. https://www.youtube.com/watch?v=tX_HPvwB-5c
