@@ -62,7 +62,8 @@ The four points mentioned above present the minimum requirement for the assignme
 - uuid 9.0.1
 
 ## Notes
-- The application should be run with EXPO GO. During this project I've tested both expo go and development build for iOS and web. However, development build for iOS has not been updated and should not be considered.
+- The application should be run with EXPO GO. 
+- During this project I've tested development build for iOS and Web. However, this was purely for my own curiousity, so development build has not been updated and should not be considered.
 - The last 24 hours before delivery, the project reached the max quota in Firebase storage. Before this, uploading images worked as expected. I am currently unable to test this functionality again before the deadline without upgrading my plan. See screenshot attatchments.
 - Initially the app used expo-router, this is no longer used other than entering the app. Project should be restructured.
 
