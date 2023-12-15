@@ -1,6 +1,5 @@
 // Modal for creating a post
 // TODO: Refactor, add error alerts, handle errors
-// BUG: FB Storage reached max capacity error is not handled
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UploadService from '../services/UploadService';

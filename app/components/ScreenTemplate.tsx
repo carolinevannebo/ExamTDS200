@@ -1,5 +1,4 @@
 // Screem template for pages that should have a gradient background (Nguyen, 2022)
-// SOURCE: Nguyen, J. (2022, March 12). React-Navigation Gradient Background - John Nguyen - Medium. Medium. https://medium.com/@dev-john-nguyen/react-navigation-gradient-background-fc8d929386df
 
 import { LinearGradient } from "expo-linear-gradient";
 import { useHeaderHeight } from "@react-navigation/elements";

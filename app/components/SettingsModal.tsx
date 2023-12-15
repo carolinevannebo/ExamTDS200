@@ -1,5 +1,5 @@
 // Modal for user settings
-// TODO: the two modals can be HOC, refactor if you have time
+// TODO: The two modals can be HOC, refactor if you have time
 // BUG: User can open settings modal (to update their own data) from other users' profile pages,
 //      follow up on this
 
@@ -42,7 +42,7 @@ const SettingsModal: React.FC = () => {
         currentUser?.bio ? setBio(currentUser?.bio) : () => {};
     }, []);
 
-    // TODO: refaktorer functions you have repeated to its own file
+    // TODO: refactor functions you have repeated to its own file
     const checkPermission = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
 

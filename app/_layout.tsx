@@ -1,6 +1,4 @@
 // Initial navigation upon starting the app for the first time
-// TODO: Bug regarding loading data before rendering the page,
-//       providers are usually at the top of the component tree, follow up on this
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
